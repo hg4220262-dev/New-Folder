@@ -48,7 +48,7 @@ export function Recovery() {
         {s.safeMode ? 'Safe Mode' : 'Recovery'}
       </div>
       <div style={{ position: 'absolute', left: 14, top: 14, display: 'flex', flexDirection: 'column', gap: 18 }}>
-        <div className="dicon hand" style={{ position: 'static' }} onDoubleClick={() => setOpen('folder')}><FolderIcon size={32} /><span className="lbl">~unmatched (23)</span></div>
+        <div className="dicon hand" style={{ position: 'static' }} onDoubleClick={() => setOpen('folder')}><FolderIcon size={32} /><span className="lbl">~unmatched ({TOTAL - n})</span></div>
         <div className="dicon hand" style={{ position: 'static' }} onDoubleClick={() => pick('signoff')}><InfoIcon size={32} type="question" /><span className="lbl">Close Archive Review</span></div>
         <div className="dicon hand" style={{ position: 'static' }} onDoubleClick={() => pick('restore')}><DocIcon size={32} kind="doc" /><span className="lbl">Restore Records</span></div>
         <div className="dicon hand" style={{ position: 'static' }} onDoubleClick={() => pick('leave')}><DocIcon size={32} /><span className="lbl">notes.txt</span></div>
@@ -68,11 +68,11 @@ export function Recovery() {
               {n > 0 && <div className="erase-log">{Array.from({ length: n }, (_, i) => <div key={i}>{serviceLine(i + 1, s)}</div>)}<div ref={logEnd} /></div>}
               {n < TOTAL && (
                 <div className="erase-prompt">
-                  <div>Remove {recs[n].file}? Type the name as recorded: <b>{recs[n].surname}, {recs[n].forename}</b></div>
+                  <div>Remove {recs[n].file}? Type the name on the record to confirm.</div>
                   <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
                     <input className="field" style={{ width: 220 }} value={typed} spellCheck={false} autoFocus
                       onChange={(e) => { setTyped(e.target.value); setBad(false); }}
-                      onKeyDown={(e) => { e.stopPropagation(); if (e.key === 'Enter') remove(); }} />
+                      onKeyDown={(e) => { if (e.key === 'Enter') remove(); }} />
                     <button className="btn default" onClick={remove}>Remove</button>
                     {!locked && <button className="btn" onClick={() => setOpen(null)}>Cancel</button>}
                   </div>
@@ -82,7 +82,7 @@ export function Recovery() {
               )}
             </div>
           )}
-          <div className="statusbar">{TOTAL - n} objects{eligible && n === 0 ? ' · Records can be removed in order.' : ''}</div>
+          <div className="statusbar">{TOTAL - n} objects</div>
         </div>
       )}
       {open === 'confirm' && choice && (

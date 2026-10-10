@@ -85,6 +85,7 @@ onStory((s, e: GameEvent) => {
     case 'cmd': {
       const l = e.line.toLowerCase();
       if (/\btype\b.*kell/.test(l)) { s.flags.readKell = true; maybeCh4(s); }
+      if (/\btype\b.*register/.test(l) && s.flags.youInRegister) s.flags.sawSelf = true;
       if (/\btype\b.*journal/.test(l)) setChapter(5);
       if (/\btype\b.*continuity/.test(l)) setChapter(3);
       if (/(taskkill|tskill).*hrscont|(sc|net) +stop +hrs/.test(l)) stopService(s, 'cmd');

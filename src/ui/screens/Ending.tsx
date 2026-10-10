@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { store, ALL_ENDINGS, seenEndings } from '../../engine/state';
 import { recap, CONCLUSION } from '../../story/recap';
 
@@ -67,6 +68,9 @@ function Clipping() {
 
 /** The whole window goes red. A few slow lines, then, after half a minute, a way back you have to look for. */
 function RedEnd({ user, onReturn }: { user: string; onReturn: () => void }) {
+  // The way back exists only once it begins to show; before that the spot is not a click target.
+  const [ready, setReady] = useState(false);
+  useEffect(() => { const t = setTimeout(() => setReady(true), 30_000); return () => clearTimeout(t); }, []);
   const lines = [
     `Record 23 removed (Dunmore, ${user}).`,
     '412 / 412. Counts agree.',
@@ -77,7 +81,7 @@ function RedEnd({ user, onReturn }: { user: string; onReturn: () => void }) {
   return (
     <div className="screen red-end">
       {lines.map((l, i) => <div key={i} className="line" style={{ animationDelay: `${2 + i * 4.5}s` }}>{l}</div>)}
-      <div className="line ret hand" style={{ animationDelay: '30s' }} onClick={onReturn}>return</div>
+      <div className={ready ? 'line ret hand' : 'line ret'} style={{ animationDelay: '30s', pointerEvents: ready ? undefined : 'none' }} onClick={ready ? onReturn : undefined}>return</div>
     </div>
   );
 }

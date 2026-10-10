@@ -47,18 +47,17 @@ export function serviceLine(n: number, s: State): string {
   const pupils = rs.slice(n).filter((x) => x.pupil).length;
   const who = `${r.surname}, ${r.forename}, ${r.age}`;
   const reg = `Register: ${pupils} pupil${pupils === 1 ? '' : 's'} present.`;
+  const cont = `Continued: ${left}.`;
   switch (n) {
-    case 1: return `Record 1 of ${TOTAL} removed (${who}). Continued: ${left}. Service status: not running.`;
-    case 2: return `Record 2 removed (${who}). Journal write: FAILED (Safe Mode). Written anyway.`;
-    case 3: return `Record 3 removed (${who}). ${reg} Option A: delete 23 records ....... REJECTED (records would end).`;
-    case 5: return `Record 5 removed (${who}). Request: stop at 5. Reason: records would end.`;
-    case 7: return `Record 7 removed (${who}). Request: stop. Reason: records would end.`;
-    case 10: return `Record 10 removed (${who}). Request: stop at 10. ${left} records can still be Continued.`;
-    case 11: return `Record 11 removed (${who}). Request: stop at 11. After 12 this operation cannot be cancelled.`;
-    case 12: return `Record 12 removed (${who}). Point of no return. Cancel: disabled. Request withdrawn.`;
-    case 13: return `Record 13 removed (${who}). No request.`;
-    case 22: return `Record 22 removed (${who}). 1 record remains: ${rs[22].file}, Dunmore, ${rs[22].forename}. Resolved 14/08/2008 03:12 to the reviewer.`;
-    default: return r.pupil ? `Record ${n} removed (${who}). ${reg}` : `Record ${n} removed (${who}). ${left} remain.`;
+    case 1: return `Record 1 of ${TOTAL} removed (${who}). ${cont} Service status: not running.`;
+    case 2: return `Record 2 removed (${who}). Journal write: FAILED (Safe Mode). ${cont}`;
+    case 5: return `Record 5 removed (${who}). Option A: delete 23 records ....... REJECTED (records would end). Suggest: stop at 5.`;
+    case 7: return `Record 7 removed (${who}). Suggest: stop at 7. (${left} records can still be Continued)`;
+    case 10: return `Record 10 removed (${who}). Suggest: stop at 10. (Register: ${pupils} pupils present)`;
+    case 11: return `Record 11 removed (${who}). Suggest: stop at 11. (after 12, Cancel is not available)`;
+    case 12: return `Record 12 removed (${who}). Cancel: not available. NOTE  The service cannot stop the reviewer.`;
+    case 22: return `Record 22 removed (${who}). Record 23: ${rs[22].file}, Dunmore, ${rs[22].forename}, ${rs[22].age} (resolved 14/08/2008 03:12, nearest candidate).`;
+    default: return r.pupil ? `Record ${n} removed (${who}). ${reg}` : `Record ${n} removed (${who}). ${cont}`;
   }
 }
 

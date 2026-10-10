@@ -108,7 +108,8 @@ export function App() {
   useAmbientGlitch();
   useEffect(() => {
     // Full-width phases ignore the 4:3 frame entirely.
-    const full = ['crash', 'reboot', 'recovery'].includes(s.phase);
+    // The red ending keeps the full window too: no bars, no glass.
+    const full = ['crash', 'reboot', 'recovery'].includes(s.phase) || (s.phase === 'ending' && s.ending === 'erase');
     if (full && s.screenMode !== 'full') { s.screenMode = 'full'; store.bump(); }
     if (!full && s.phase !== 'desktop' && s.screenMode === 'full') { s.screenMode = 'boxed'; store.bump(); }
   }, [s.phase]);

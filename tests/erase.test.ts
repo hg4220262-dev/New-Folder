@@ -48,6 +48,18 @@ describe('hand removal', () => {
     expect(E.removeNext('Ann Pryce').ok).toBe(true);
   });
 
+  it('counts the register read at the command prompt as seeing the name', () => {
+    store.s.flags.assembledKell = true;
+    store.s.phase = 'desktop';
+    emit({ t: 'cmd', line: 'type "Carrow School Register 1979-80.txt"' });
+    expect(store.s.flags.sawSelf).toBeUndefined();
+    store.s.flags.youInRegister = true;
+    emit({ t: 'cmd', line: 'type "Carrow School Register 1979-80.txt"' });
+    store.s.phase = 'recovery';
+    expect(store.s.flags.sawSelf).toBe(true);
+    expect(E.eraseEligible(store.s)).toBe(true);
+  });
+
   it('refuses without eligibility and refuses a wrong or out-of-order name', () => {
     expect(E.removeNext('Ann Pryce').ok).toBe(false);
     Object.assign(store.s.flags, { assembledKell: true, sawSelf: true });
@@ -68,7 +80,7 @@ describe('hand removal', () => {
     expect(E.eraseLocked(store.s)).toBe(false);
     typeAll(12);
     expect(E.eraseLocked(store.s)).toBe(true);
-    expect(E.serviceLine(12, store.s)).toContain('Point of no return');
+    expect(E.serviceLine(12, store.s)).toContain('Cancel: not available');
     const last = E.records(store.s)[22];
     expect(last.forename).toBe('Reona');
     expect(last.surname).toBe('Dunmore');
@@ -92,6 +104,6 @@ describe('hand removal', () => {
     expect(await leaveNote(dir, { ending: 'erase', name: 'Reona' })).toBe('rec_0435.txt');
     const text = readFileSync(path.join(dir, 'rec_0435.txt'), 'utf8');
     expect(text).toContain('REMOVED');
-    expect(text).toContain('Record 23 : Dunmore, Reona.');
+    expect(text).toContain('I made one copy out here, Reona');
   });
 });
