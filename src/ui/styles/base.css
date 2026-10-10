@@ -1,0 +1,104 @@
+/* Period fonts: W95FA (a Windows 9x style bitmap face) for the interface and VT323 for terminals. Both are SIL OFL. */
+@font-face { font-family: 'W95FA'; src: url('../fonts/win95fa-latin-400-normal.woff2') format('woff2'); font-display: block; }
+@font-face { font-family: 'VT323'; src: url('../fonts/vt323-latin-400-normal.woff2') format('woff2'); font-display: block; }
+/* Global + monitor framing. All XP visuals are original CSS recreations. */
+* { box-sizing: border-box; }
+html, body, #root { margin: 0; height: 100%; background: #000; overflow: hidden; }
+#root { overflow: clip; }
+body { cursor: none; user-select: none; -webkit-font-smoothing: antialiased; }
+:root {
+  --ui: 'W95FA', Tahoma, Verdana, sans-serif;
+  --mono: 'VT323', 'Courier New', monospace;
+  --sel: #316ac5;
+  --face: #ece9d8;
+}
+
+/* The screen layers use `overflow: clip`, not `hidden`: a `hidden` box can still be
+   scrolled by the browser (e.g. to bring a focused text box into view), which used to
+   slide the whole desktop up while typing. `clip` can never scroll. */
+.void { position: fixed; inset: 0; background: #000; overflow: clip; }
+.monitor {
+  position: absolute; left: 50%; top: 50%;
+  width: 1024px; height: 768px;
+  transform-origin: 0 0;
+  overflow: clip;
+  font-family: var(--ui); font-size: 13px; color: #000;
+  background: #000;
+}
+.monitor.full { overflow: visible; }
+.monitor.leak { overflow: visible; }
+/* Subtle CRT-era LCD feel: very faint, never noticeable on its own. */
+.monitor::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 99999;
+  background: repeating-linear-gradient(0deg, rgba(0,0,0,0.014) 0 1px, transparent 1px 3px);
+  mix-blend-mode: multiply;
+}
+
+.cursor {
+  position: absolute; left: 0; top: 0; z-index: 100000; pointer-events: none;
+  width: 32px; height: 32px; will-change: transform;
+}
+/* The shell's soft cursor shadow. */
+.cursor svg { overflow: visible; filter: drop-shadow(1.5px 1.5px 1px rgba(0,0,0,0.38)); }
+/* Hourglass: sand runs down, then the glass flips. */
+.cursor .hg { transform-box: fill-box; transform-origin: 50% 50%; animation: hg-flip 1.6s steps(1) infinite; }
+.cursor .hg .sand-top { transform-box: fill-box; transform-origin: 50% 100%; animation: hg-top 1.6s linear infinite; }
+.cursor .hg .sand-bot { transform-box: fill-box; transform-origin: 50% 100%; animation: hg-bot 1.6s linear infinite; }
+@keyframes hg-flip { 0% { transform: rotate(0); } 86% { transform: rotate(45deg); } 92% { transform: rotate(135deg); } 97% { transform: rotate(0); } }
+@keyframes hg-top { 0% { transform: scaleY(1); } 80%, 100% { transform: scaleY(0.05); } }
+@keyframes hg-bot { 0% { transform: scaleY(0.05); } 80%, 100% { transform: scaleY(1); } }
+
+button, input, textarea, select { font-family: var(--ui); font-size: 13px; }
+textarea { cursor: none; }
+input { cursor: none; }
+
+/* Edge-of-screen leakage layer (outside the 4:3 frame). */
+.edge-layer { position: fixed; inset: 0; pointer-events: none; z-index: 1; overflow: clip; }
+.edge-names {
+  position: absolute; top: 0; bottom: 0; width: 100%;
+  font-family: var(--mono); font-size: 14px; line-height: 14px; color: rgba(90,110,160,0.10);
+  white-space: pre; overflow: hidden;
+}
+@keyframes edge-scroll { from { transform: translateY(0); } to { transform: translateY(-50%); } }
+
+/* Reduce motion: shell animations become instant (story effects check the setting separately). */
+.void.still .win, .void.still .menu, .void.still .startmenu, .void.still .balloon, .void.still .files,
+.void.still .bootlogo, .void.still .welcome, .void.still .welcome .status, .void.still .title-screen,
+.void.still .title-screen .folder-mark, .void.still .sd-box, .void.still .desktop.arrive * { animation: none !important; }
+.void.still .tp-body-wrap { transition: none; }
+
+.pause-veil {
+  position: fixed; inset: 0; z-index: 200000; background: rgba(0,0,0,0.78);
+  display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 14px;
+  font-family: var(--ui); color: #ddd; font-size: 13px; cursor: default;
+}
+.pause-veil h2 { font-weight: normal; font-size: 18px; margin: 0; letter-spacing: 1px; }
+.pause-veil button { cursor: pointer; min-width: 180px; padding: 6px 12px; background: #222; color: #ddd; border: 1px solid #555; }
+.pause-veil button:hover { background: #333; }
+.pause-veil .row { display: flex; gap: 8px; align-items: center; }
+.pause-veil label { cursor: pointer; display: flex; gap: 8px; align-items: center; }
+.pause-veil input { cursor: pointer; }
+.pause-veil small { color: #888; }
+
+/* CRT monitor look: scanlines, phosphor mask, curved-glass vignette and reflection, faint flicker and a slow roll bar. */
+.monitor.crt { border-radius: 16px / 18px; }
+.monitor.crt::after {
+  mix-blend-mode: normal; z-index: 99999;
+  background:
+    repeating-linear-gradient(0deg, rgba(0,0,0,0.07) 0 1px, rgba(0,0,0,0) 1px 3px),
+    repeating-linear-gradient(90deg, rgba(255,0,0,0.012) 0 1px, rgba(0,255,0,0.01) 1px 2px, rgba(0,0,255,0.012) 2px 3px);
+}
+.monitor.crt::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 99998; border-radius: inherit;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0) 0, rgba(255,255,255,0.045) 50%, rgba(255,255,255,0) 100%) 0 -140px / 100% 140px repeat-x no-repeat,
+    linear-gradient(125deg, rgba(255,255,255,0.09) 0%, rgba(255,255,255,0) 22%),
+    radial-gradient(ellipse at center, rgba(0,0,0,0) 60%, rgba(0,0,0,0.4) 100%);
+  box-shadow: inset 0 0 90px rgba(0,0,0,0.55), inset 0 0 8px rgba(0,0,0,0.8);
+  animation: crt-roll 7s linear infinite, crt-flicker 0.14s steps(2) infinite;
+}
+@keyframes crt-roll { from { background-position: 0 -140px, 0 0, 0 0; } to { background-position: 0 900px, 0 0, 0 0; } }
+@keyframes crt-flicker { 0% { opacity: 1; } 50% { opacity: 0.94; } }
+.void.still .monitor.crt::before { animation: none; }
+
+.crt-layer { position: absolute; inset: 0; }

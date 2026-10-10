@@ -1,0 +1,57 @@
+{
+  "name": "new-folder",
+  "productName": "New Folder",
+  "version": "0.1.0",
+  "description": "A mystery game set inside an old computer.",
+  "private": true,
+  "type": "module",
+  "main": "electron/main.cjs",
+  "scripts": {
+    "dev": "vite",
+    "build": "node scripts/build-native.mjs && tsc --noEmit && vite build",
+    "start": "npm run build && electron .",
+    "debug": "npm run build && electron . --debug",
+    "test": "vitest run",
+    "shots": "node scripts/shots.mjs",
+    "package": "npm run build && electron-builder --mac --dir",
+    "native": "node scripts/build-native.mjs",
+    "probe-window": "npm run build && node scripts/probe-window.mjs"
+  },
+  "build": {
+    "appId": "com.newfolder.game",
+    "productName": "New Folder",
+    "files": [
+      "dist/**",
+      "electron/**",
+      "!electron/native/*.m",
+      "package.json"
+    ],
+    "directories": {
+      "output": "release"
+    },
+    "mac": {
+      "category": "public.app-category.adventure-games",
+      "target": "dir",
+      "extendInfo": {
+        "NSDesktopFolderUsageDescription": "When a story ends, New Folder leaves one short text file on your Desktop. It never reads, changes or deletes your files."
+      }
+    },
+    "asarUnpack": [
+      "electron/native/*.node"
+    ]
+  },
+  "dependencies": {
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "electron": "^44.6.0",
+    "playwright-core": "^1.63.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.3",
+    "vitest": "^5.0.3"
+  }
+}
