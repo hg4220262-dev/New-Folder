@@ -4,7 +4,7 @@ import { stamp } from '../../engine/clock';
 import { sfx } from '../../engine/bus';
 import { hrsLog, journalLine } from '../../engine/director';
 import { chooseEnding } from '../../story/climax';
-import { HSC_HOST, HSC_USER, HSC_PASSWORD, RACKS, NODES, OFFLINE, FILES, specOf, nodeLabel, rackOf, rackDown, fetchReplica,  WEIR_HOST, SLUICE_CODE, weirMounted, markWeirRead, WEIR_FILES, WEIR_PAPERS, WEIR_DIRS, WEIR_OFFICER, type Fetch } from '../../story/storage';
+import { HSC_HOST, HSC_USER, HSC_PASSWORD, RACKS, NODES, OFFLINE, FILES, specOf, nodeLabel, rackOf, rackDown, fetchReplica, audit, WEIR_HOST, SLUICE_CODE, weirMounted, markWeirRead, WEIR_FILES, WEIR_PAPERS, WEIR_DIRS, WEIR_OFFICER, type Fetch } from '../../story/storage';
 
 const AUDIT: [string, string, string][] = [
   ['12/02/2008 10:14', 't.brandt', 'LOGIN'],
@@ -16,6 +16,10 @@ const AUDIT: [string, string, string][] = [
   ['03/06/2008 11:10', 's.okafor', 'FETCH block 5 (dn-21.hsc) TIMEOUT (rack 2, no heartbeat)'],
   ['10/06/2008 09:00', 'SYSTEM', 'ACCOUNT s.okafor disabled (user reassigned)'],
   ['30/06/2008 14:20', 'm.price', 'LOGIN'],
+  ['01/07/2008 10:05', 'm.price', 'FETCH board_report_12081979.doc block 1 (dn-11.hsc) OK'],
+  ['01/07/2008 10:09', 'm.price', 'FETCH board_report_12081979.doc block 2 (dn-12.hsc) OK'],
+  ['01/07/2008 10:16', 'm.price', 'FETCH board_report_12081979.doc block 3 (dn-32.hsc) OK'],
+  ['01/07/2008 10:24', 'm.price', 'FETCH board_report_12081979.doc block 4 (dn-31.hsc) OK'],
   ['04/07/2008 15:41', 'm.price', 'FETCH board_report_12081979.doc block 5 (dn-32.hsc) OK'],
   ['04/07/2008 15:44', 'm.price', 'JOIN board_report_12081979.doc 5 of 5'],
   ['04/07/2008 15:44', 'SYSTEM', 'DELETE joined copy (m.price)'],
@@ -54,7 +58,7 @@ export function Hsc({ rest, go }: { rest: string; go: (u: string) => void }) {
 
   if (!s.flags.hscAuth) {
     const login = () => {
-      if (u === HSC_USER && p === HSC_PASSWORD) { s.flags.hscAuth = true; store.bump(); }
+      if (u === HSC_USER && p === HSC_PASSWORD) { s.flags.hscAuth = true; audit('LOGIN'); store.bump(); }
       else setErr('401 Unauthorized. Incorrect user name or password.');
     };
     return (
@@ -160,10 +164,12 @@ export function Hsc({ rest, go }: { rest: string; go: (u: string) => void }) {
       </tbody></table></>);
   }
   if (path === '/logs') {
+    const rows = [...AUDIT, ...((s.flags.hscAudit ?? []) as [string, string, string][])];
+    // A save that logged in before the login was recorded still gets one, first among the reviewer's rows.
+    if (!rows.some(([, who, what]) => who === HSC_USER && what === 'LOGIN')) rows.splice(AUDIT.length, 0, [stamp(), HSC_USER, 'LOGIN']);
     return (<>{head}<h1>NameNode audit log</h1>
       <table className="listview"><thead><tr><th>Time</th><th>User</th><th>Action</th></tr></thead><tbody>
-        {[...AUDIT, ...((s.flags.hscAudit ?? []) as [string, string, string][])].map(([t, who, what], i) => <tr key={i}><td>{t}</td><td>{who}</td><td>{what}</td></tr>)}
-        <tr><td>{stamp()}</td><td>{HSC_USER}</td><td>LOGIN</td></tr>
+        {rows.map(([t, who, what], i) => <tr key={i}><td>{t}</td><td>{who}</td><td>{what}</td></tr>)}
       </tbody></table></>);
   }
   const spec = specOf(q.get('file') ?? 'report');

@@ -31,7 +31,9 @@ Re: Carrow archive. Sign-off by Friday 15 August
 
 Wendell Utilities plc has confirmed that the final invoice on the Carrow contract (£41,000) will be paid on certified disposal of the paper originals and not before. Under clause 4 its indemnity under the 1982 Transfer Order lapses once the originals have been pulped and the digital record has been certified complete. The pulping contractor is booked for Monday 18 August.
 
-The Evacuation Completion Certificate is the official record of the relocation, and the review is a check of the digital copy against it. Questions about the 1979 figures are outside the scope of the contract; if the reviewer raises any, please refer them to me. Two reviewers have already been reassigned from this contract this year and another change would put the deadline back. In March I asked IT to take the plant-room rack off the network until Carrow is signed off. Leave it off.
+The Evacuation Completion Certificate is the official record of the relocation, and the review is a check of the digital copy against it. Questions about the 1979 figures are outside the scope of the contract; if the reviewer raises any, please refer them to me. Two reviewers have already been reassigned from this contract this year and another change would put the deadline back.
+
+The plant-room rack has been off the network since March at my request. Please leave it that way until Carrow is signed off.
 
 Please keep the current reviewer on the contract through to sign-off on Friday.
 
@@ -55,7 +57,7 @@ Director`,
 > Summary prepared for the Director. Not to be circulated.`,
     }),
     n('adm_telemetry', 'Weir telemetry - service account.txt', 'txt', ['adm_dir'], {
-      ...a, content: 'WEIR TELEMETRY - SERVICE ACCOUNTS\r\nK. Aldous, 30/06/2008. Admin folder only. Please do not share these.\r\n\r\nHost:  nantweir.stn (Nant Weir station). Telemetry contractor since 1986.\r\nLink:  not on the data network. Coax, Carrow Cable television trunk, via distribution node CN-7. Terminal: linkterm.exe (this folder).\r\nRoute: Halden headend - Carrow (village; under the reservoir since 08/1979) - Nant Weir station.\r\n\r\nAccounts\r\n  CN-7 node       headend / tern-ledger-52   (engineering login)\r\n  Weir terminal   rowley / hazel-ferry-88    (contractor service account)\r\n\r\nIf the weir shows LINK DOWN / no carrier, the node has lost the return path:\r\n  1. CONNECT cn7. Log in as above.\r\n  2. PLAN. Lists the channels on the node.\r\n  3. TUNE <channel> to the telemetry carrier. Wait for "Return path open".\r\n  4. CONNECT weir. Log in as above. The station store is exported to the cluster page as nantweir.stn (read-only).\r\n\r\nTODO: carrier channel number. Not in the 1986 paperwork. Contractor says it is whichever entry on PLAN has no programme assigned; get it in writing.\r\n\r\nStatus at handover 30/06/2008 (KA): not tested. Link not used since the contractor\'s install (1986). Procedure above is from the contractor\'s sheet.',
+      ...a, content: 'WEIR TELEMETRY - SERVICE ACCOUNTS\r\nK. Aldous, 30/06/2008. Admin folder only. Please do not share these.\r\n\r\nHost:  nantweir.stn (Nant Weir station). Telemetry contractor since 1986.\r\nLink:  not on the data network. Coax, Carrow Cable television trunk, via distribution node CN-7. Terminal: linkterm.exe (this folder).\r\nRoute: Halden headend - CN-7 (old Carrow village node) - Nant Weir station. CN-7 and the trunk beyond it are under the reservoir; not inspectable.\r\n\r\nAccounts\r\n  CN-7 node       headend / tern-ledger-52   (engineering login)\r\n  Weir terminal   rowley / hazel-ferry-88    (contractor service account)\r\n\r\nIf the weir shows LINK DOWN / no carrier, the node has lost the return path:\r\n  1. CONNECT cn7. Log in as above.\r\n  2. PLAN. Lists the channels on the node.\r\n  3. TUNE <channel> to the telemetry carrier. Wait for "Return path open".\r\n  4. CONNECT weir. Log in as above. The station store is exported to the cluster page as nantweir.stn (read-only).\r\n\r\nTODO: carrier channel number. Not in the 1986 paperwork. Contractor says it is whichever entry on PLAN has no programme assigned; get it in writing.\r\n\r\nStatus at handover 30/06/2008 (KA): not tested. Link not used since the contractor\'s install (1986). Procedure above is from the contractor\'s sheet.',
     }),
     n('adm_fault', 'Draft - fault report, Archive Tools 2.1.txt', 'txt', ['adm_dir'], {
       ...a, created: '03/03/2008 18:12', modified: '30/06/2008 16:40', author: 'K. Aldous',
@@ -85,11 +87,12 @@ reviewer permitted.
 
 Response
 R. Hale, 04/03/2008: behaviour is "as designed for Carrow". The report is not
-to be sent to the vendor. The plant-room rack is to be taken off the network
-until the Carrow review is closed.
+to be submitted. The plant-room rack is to be taken off the network until the
+Carrow review is closed.
 
 Status
-Not sent. Rack 2 switched off 05/03/2008 as instructed. Leaving 30/06/2008.`,
+Not sent. Rack 2 switch powered off 05/03/2008 as instructed; shows on the
+NameNode as not responding. Filed in Admin at handover, 30/06/2008 (KA).`,
     }),
     n('adm_linkterm', 'linkterm.exe', 'exe', ['adm_dir'], { ...a, size: 98_304, target: 'app:linkterm', comments: 'Carrow Cable / HSC Link Terminal 1.2. Dial-up client for hosts on the Carrow Cable trunk.' }),
     n('adm_brandt', 'brandt_unsent.txt', 'txt', ['adm_dir'], {

@@ -14,7 +14,7 @@ const handlers: Handler[] = [];
 export function onStory(h: Handler) { handlers.push(h); }
 
 /** Bumped whenever new files are added to the world, so older saves can pick them up. */
-export const WORLD_V = 3;
+export const WORLD_V = 4;
 
 export function newState(user: string, full: string): State {
   return {

@@ -103,8 +103,8 @@ export function markWeirRead(id: string) {
   if (!WEIR_FILES[id] || seen.includes(id)) return;
   seen.push(id);
   if (seen.length === WEIR_PAPERS) {
-    journalLine(`Reviewer read ${WEIR_PAPERS} records on nantweir.stn.\nOption D: open the gates at Nant Weir ..... REJECTED\n(service has no authority; panel requires an\nofficer's name)`);
-    hrsLog(`Reviewer opened ${WEIR_PAPERS} records on nantweir.stn (outside the archive). Option D considered: REJECTED, no authority.`, 'Information');
+    journalLine(`Reviewer read ${WEIR_PAPERS} records on nantweir.stn.\nOption D: open gates, Nant Weir ... REJECTED\n(panel requires an officer's name)`);
+    hrsLog(`Reviewer opened ${WEIR_PAPERS} records on nantweir.stn (outside the archive). Option D: REJECTED (panel requires an officer's name).`, 'Information');
   }
   store.bump();
 }
@@ -175,7 +175,7 @@ export function tryJoin(key: string, picks: string[]): { ok: true } | { ok: fals
     store.bump();
     if (weirMounted()) {
       hrsLog('Volume mounted on hsc.haldenrecords.co.uk:50070: nantweir.stn (read-only). Not an archive volume.', 'Warning');
-      journalLine('Mounted: nantweir.stn (read-only). 4 directories, 8 files.\nKeeper 1979-1986: E. Rowley. Not a service.\n0 Carrow records. Outside Authority scope. No action.');
+      journalLine('Mounted: nantweir.stn (read-only). 4 directories, 8 files.\n/keeper: E. Rowley, 1978-1986. 3 files, typed copies.\n0 Carrow records. Outside Authority scope. No action.');
       setTimeout(() => { balloon('HSC Client', 'Volume mounted: nantweir.stn (read-only). 4 directories, 8 files. Listed on the cluster page.'); sfx('ding'); store.bump(); }, 3500);
     }
   }

@@ -93,28 +93,26 @@ Thu -
 
 /** The same file, three laptops ago. Each stops where its writer was reassigned. */
 export const PREVIOUS_NOTES = [
-  { date: '27/02/2008 17:40', author: 't.brandt', note: 'Retained at reissue.', name: 'notes.txt', content: `HRS job - Carrow archive
-------------------------
-Diane: check the counts agree, then run Close Archive Review.
-Due Fri 29th.
+  { date: '27/02/2008 08:52', author: 't.brandt', note: 'Retained at reissue.', name: 'notes.txt', content: `CARROW ARCHIVE (HRS, 3 wks)
+Diane - counts to agree, then "Close Archive Review" on the desktop. Fri 29th.
 
 Tue 12 - indexed admin + census. census 435 rows. relocation list 412.
-Thu 14 - asked Diane about the 23. "unmatched scans get hidden, standard."
-Mon 18 - there is a storage cluster. settings in Program Files, hsc.ini.
-         the Board's own report is on it, in 5 blocks. have 1 and 3.
-Fri 22 - plant room rack keeps dropping. 2, 4, 5 time out.
-Tue 26 - switch has to be reset from an admin console. no password.
-         wrote to Diane. did not send it.
+         storage cluster, settings in hsc.ini. the Board's own report is on it,
+         5 blocks. got 1.
+Thu 14 - asked Diane about the 23. "unmatched scans get hidden, standard." got 3.
+Mon 18 - read 1 and 3. the 12th: Mill Row not moved.
+Fri 22 - cluster page: plant room rack keeps dropping. 2, 4, 5 next week.
+Tue 26 - wrote to Diane, not sent yet.
 Wed 27 - 
 ` },
-  { date: '10/06/2008 16:05', author: 's.okafor', note: 'Retained at reissue.', name: 'notes.txt', content: `Carrow - HRS
+  { date: '10/06/2008 08:47', author: 's.okafor', note: 'Retained at reissue.', name: 'notes.txt', content: `Carrow - HRS
 ------------
 Diane says the last reviewer left. Files already indexed, which is odd.
 
 Tue 3 - 435 / 412. asked for the Board minutes. "not in scope."
-Wed 4 - cluster: blocks 1 and 5 only on rack 2. rack 2 no heartbeat.
-Fri 6 - Properties > Record History on Relocation Summary: a SYSTEM
-        edit, 435 -> 412. the software edits the files.
+        cluster: tried blocks 1 and 5 from the plant room rack. both time out.
+        rack 2 no heartbeat.
+Fri 6 - Properties > Record History on Relocation Summary: SYSTEM edit, 435 -> 412.
 Mon 9 - sent Diane the history tab as a screenshot.
 Tue 10 - 
 ` },
@@ -122,8 +120,8 @@ Tue 10 -
 -------------
 Mon 30 - started. 435 / 412. not emailing anyone this time.
 Tue 1 - blocks 1 2 3 4 from racks 1 and 3. block 5: dn-32 is slow, keep trying.
-Wed 2 - Aldous (IT) in for the laptop audit. his admin password is on a yellow
-        note under his keyboard. did not look. did look.
-Thu 3 - block 5 came down. all five. join it tomorrow when the office is quiet.
-Fri 4 - 15.41 joined. 23 people were in the houses. printing it now befo` },
+Wed 2 - IT in for the laptop audit. Aldous has gone, the new one keeps the admin
+        password on a yellow note under his keyboard. copied it.
+Thu 3 - dn-32 still slow. read 1 to 4 on their own. block 4: 23 people were in the houses.
+Fri 4 - 15.41 block 5 down. all five. joining now, printing it befo` },
 ];

@@ -314,9 +314,9 @@ describe('the three before you', () => {
     setChapter(3);
     const authors = (store.s.fs.notes.versions ?? []).map((v) => v.author);
     expect(authors).toEqual(['t.brandt', 's.okafor', 'm.price']);
-    expect(store.s.fs.notes.versions![2].content).toContain('15.41 joined');
+    expect(store.s.fs.notes.versions![2].content).toContain('15.41 block 5 down');
     const { liveContent, makeCtx } = await import('../src/story/world');
-    expect(liveContent(store.s.fs.journal, makeCtx('Reona', 'Reona Monga'), 3, store.s.flags)).toContain('Replication 3 exceeded');
+    expect(liveContent(store.s.fs.journal, makeCtx('Reona', 'Reona Monga'), 3, store.s.flags)).toContain('Retained: notes.txt, 3 previous versions');
   });
 
   it('writes the reviewer into the audit log, and the failed SYSTEM delete a minute after the join', async () => {
@@ -337,6 +337,6 @@ describe('the three before you', () => {
     ['keeper_notes', 'kell_visit', 'rowley_letter'].forEach(markWeirRead);
     expect(store.s.flags.jl.join('\n')).not.toContain('Option D');
     markWeirRead('manual');
-    expect(store.s.flags.jl.join('\n')).toContain('Option D: open the gates at Nant Weir ..... REJECTED');
+    expect(store.s.flags.jl.join('\n')).toContain('Option D: open gates, Nant Weir ... REJECTED');
   });
 });

@@ -3,6 +3,7 @@ import { newState, runFx, WORLD_V } from '../../engine/director';
 import { sfx } from '../../engine/bus';
 import type { State, Slot } from '../../engine/state';
 import '../../story/triggers';
+import { PREVIOUS_NOTES } from '../../story/world_base';
 
 declare global {
   interface Window {
@@ -66,6 +67,8 @@ export function migrate(st: State) {
   for (const [id, n] of Object.entries(fresh)) {
     if (!st.fs[id] && !purged.includes(id) && n.parents.every((p) => st.fs[p] || fresh[p])) st.fs[id] = n;
   }
+  // A save already past chapter 3 missed the fx that surfaces the three before; their notes.txt go in now.
+  if (st.chapter >= 3 && st.fs.notes && !(st.fs.notes.versions ?? []).some((v) => v.author === 't.brandt')) st.fs.notes.versions = [...PREVIOUS_NOTES, ...(st.fs.notes.versions ?? [])];
   st.flags.worldV = WORLD_V;
 }
 
