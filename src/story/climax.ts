@@ -66,7 +66,7 @@ export function assistantWins() { finish('recorded'); }
 /** The player signs off before learning anything (chapters 1-3). */
 export function earlyEnding() { finish('signed_early'); }
 
-export type EndingId = 'signoff' | 'restore' | 'leave' | 'signed_early' | 'disclose' | 'drain' | 'recorded';
+export type EndingId = 'signoff' | 'restore' | 'leave' | 'signed_early' | 'disclose' | 'drain' | 'recorded' | 'erase';
 
 export function chooseEnding(id: EndingId) { finish(id); }
 

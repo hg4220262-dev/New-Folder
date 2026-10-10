@@ -50,6 +50,8 @@ onStory((s, e: GameEvent) => {
       if (e.id === 'journal') setChapter(5);
       if (e.id === 'hrsini') setChapter(3);
       if (e.id === 'adm_memo') s.flags.readMemo = true;
+      // Seeing your own name on the register is what makes the hand removal possible later.
+      if (e.id === 'regp2' && s.flags.youInRegister) s.flags.sawSelf = true;
       maybeCh4(s);
       break;
     }

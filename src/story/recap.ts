@@ -38,4 +38,5 @@ export const CONCLUSION: Record<string, string> = {
   drain: 'The 23 were buried at Halden in November 2008. Lake Wendell was not refilled.',
   signed_early: 'The Carrow record was certified complete at 412 on 14 August 2008 and locked.',
   recorded: "The Carrow record was finished at 435 / 435. Record 23 carries the reviewer's forename.",
+  erase: 'The 23 unmatched records were removed by hand on 14 August 2008, each by name. The archive stands at 412.',
 };

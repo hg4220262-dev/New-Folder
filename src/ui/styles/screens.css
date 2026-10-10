@@ -134,3 +134,13 @@
 .clipping .clip-end { font-style: italic; }
 .title-screen .endings-found { color: #666; font-size: 12px; text-align: center; letter-spacing: 0.5px; margin-top: 4px; }
 .title-screen .endings-found div { color: #888; margin-top: 3px; }
+/* The hand removal: the service's lines inside the ~unmatched window, and the red screen after. */
+.erase-pane { border-top: 1px solid #aca899; background: #ece9d8; padding: 6px 8px; font-size: 12px; }
+.erase-head { color: #666; margin-bottom: 4px; }
+.erase-log { background: #fff; border: 1px solid #7f9db9; max-height: 96px; overflow-y: auto; padding: 3px 5px; font: 15px/15px var(--mono); color: #222; }
+.erase-prompt { margin-top: 6px; display: flex; flex-direction: column; gap: 5px; }
+.red-end { background: #8a0000; color: #f0c4c4; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 14px; padding: 0 12%; font: 19px/22px var(--mono); animation: red-in 1.6s ease-out; }
+@keyframes red-in { from { background: #000; } }
+.red-end .line { opacity: 0; animation: fadein 2.4s forwards; }
+.red-end .ret { color: rgba(255,255,255,0.22); font: 13px var(--ui); margin-top: 48px; align-self: center; }
+.red-end .ret:hover { color: rgba(255,255,255,0.6); }

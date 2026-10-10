@@ -92,6 +92,16 @@ const BODY = {
     '',
     `I made one copy out here, ${n}, before I closed the record.`,
   ],
+  erase: (n) => [
+    'Status    : REMOVED   (23 of 23, by name)',
+    '',
+    'Removed by the reviewer, 14/08/2008, in record order: Pryce, Ellery, Marsh, Hollins, Webb, Dunmore.',
+    'Each name was typed. Each removal was written here, service not running.',
+    `Record 23 : Dunmore, ${n}. Removed last, by the reviewer, by name.`,
+    '',
+    '412 / 412. Counts agree. Unmatched: 0.',
+    'This file is the only copy.',
+  ],
   signed_early: () => [
     'Status    : NOT REVIEWED',
     '',

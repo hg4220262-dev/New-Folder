@@ -65,6 +65,23 @@ function Clipping() {
   );
 }
 
+/** The whole window goes red. A few slow lines, then, after half a minute, a way back you have to look for. */
+function RedEnd({ user, onReturn }: { user: string; onReturn: () => void }) {
+  const lines = [
+    `Record 23 removed (Dunmore, ${user}).`,
+    '412 / 412. Counts agree.',
+    'Unmatched: 0. Continued: 0.',
+    'Reviewer: no record.',
+    'HRS Continuity Service: not running.',
+  ];
+  return (
+    <div className="screen red-end">
+      {lines.map((l, i) => <div key={i} className="line" style={{ animationDelay: `${2 + i * 4.5}s` }}>{l}</div>)}
+      <div className="line ret hand" style={{ animationDelay: '30s' }} onClick={onReturn}>return</div>
+    </div>
+  );
+}
+
 export function Ending() {
   const s = store.s;
   const id = s.ending ?? 'signed_early';
@@ -72,6 +89,7 @@ export function Ending() {
   if (id === 'disclose' && s.flags.assembledKell) lines = [...lines.slice(0, 3), "The twenty-three were named at the inquiry, from the list in Kell's draft.", ...lines.slice(3)];
   // The finished file is kept; it shows as complete on the file-select screen.
   const restart = () => { s.windows = []; s.screenMode = 'boxed'; store.save(); s.phase = 'title'; store.bump(); };
+  if (id === 'erase') return <RedEnd user={s.user} onReturn={restart} />;
   const done = recap(s);
   const t0 = id === 'drain' ? 4.5 : 1.2 + lines.length * 2.6;
   const t1 = t0 + 1.5 + done.length * 0.35;

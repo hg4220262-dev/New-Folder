@@ -64,7 +64,7 @@ const ENDINGS_KEY = 'newfolder.endings.v1';
 /** Every ending, in the order the endings list shows them. */
 export const ALL_ENDINGS: [string, string][] = [
   ['signed_early', 'Signed off (early)'], ['signoff', 'Signed off'], ['restore', 'Restored'], ['leave', 'Left open'],
-  ['disclose', 'Released'], ['drain', 'Emptied'], ['recorded', 'Recorded'],
+  ['disclose', 'Released'], ['drain', 'Emptied'], ['recorded', 'Recorded'], ['erase', 'Erased'],
 ];
 
 /** Endings reached on this computer, across all three save files (including ones since erased). */
