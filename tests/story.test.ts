@@ -147,7 +147,7 @@ describe('storage cluster', () => {
     fetchGood('report');
     expect(joinGood('report').ok).toBe(true);
     expect(store.s.flags.assembled).toBe(true);
-    expect(store.s.fs.mrreport.content).toContain('never joined');
+    expect(store.s.fs.mrreport.content).toContain('not to be copied');
   });
 
   it("needs Rack 2 restored before the engineer's statement can be joined", () => {
@@ -167,9 +167,9 @@ describe('stall hints', () => {
     store.s.chapter = 3;
     play(1000);
     play(3 * 60_000);
-    expect(store.s.log.some((l) => l.text.includes('Not every record'))).toBe(false);
+    expect(store.s.log.some((l) => l.text.includes('7 on disk'))).toBe(false);
     play(2 * 60_000);
-    expect(store.s.log.some((l) => l.text.includes('Not every record'))).toBe(true);
+    expect(store.s.log.some((l) => l.text.includes('7 on disk'))).toBe(true);
   });
 });
 
@@ -292,7 +292,7 @@ describe('side route hints', () => {
     store.s.flags.assembled = true;
     play(1000);
     play(3 * 60_000);
-    expect(store.s.log.some((l) => l.text.includes('whoever looked after this store'))).toBe(true);
+    expect(store.s.log.some((l) => l.text.includes('HSC /browse: 5 files'))).toBe(true);
   });
 });
 

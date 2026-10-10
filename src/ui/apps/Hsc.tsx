@@ -10,16 +10,16 @@ const AUDIT: [string, string, string][] = [
   ['12/02/2008 10:14', 't.brandt', 'LOGIN'],
   ['12/02/2008 10:31', 't.brandt', 'FETCH board_report_12081979.doc block 1 (dn-11.hsc) OK'],
   ['14/02/2008 09:50', 't.brandt', 'FETCH board_report_12081979.doc block 3 (dn-32.hsc) OK'],
-  ['27/02/2008 09:00', 'SYSTEM', 'ACCOUNT t.brandt reassigned'],
+  ['27/02/2008 09:00', 'SYSTEM', 'ACCOUNT t.brandt disabled (user reassigned)'],
   ['03/06/2008 11:02', 's.okafor', 'LOGIN'],
   ['03/06/2008 11:09', 's.okafor', 'FETCH block 1 (dn-21.hsc) TIMEOUT (rack 2, no heartbeat)'],
   ['03/06/2008 11:10', 's.okafor', 'FETCH block 5 (dn-21.hsc) TIMEOUT (rack 2, no heartbeat)'],
-  ['10/06/2008 09:00', 'SYSTEM', 'ACCOUNT s.okafor reassigned'],
+  ['10/06/2008 09:00', 'SYSTEM', 'ACCOUNT s.okafor disabled (user reassigned)'],
   ['30/06/2008 14:20', 'm.price', 'LOGIN'],
   ['04/07/2008 15:41', 'm.price', 'FETCH board_report_12081979.doc block 5 (dn-32.hsc) OK'],
   ['04/07/2008 15:44', 'm.price', 'JOIN board_report_12081979.doc 5 of 5'],
   ['04/07/2008 15:44', 'SYSTEM', 'DELETE joined copy (m.price)'],
-  ['04/07/2008 15:45', 'SYSTEM', 'ACCOUNT m.price closed'],
+  ['04/07/2008 15:45', 'SYSTEM', 'ACCOUNT m.price disabled (contract ended)'],
 ];
 const term: React.CSSProperties = { background: '#111', color: '#7f7', padding: 8, fontFamily: 'var(--mono)', fontSize: 17, lineHeight: '15px' };
 
@@ -45,13 +45,13 @@ export function Hsc({ rest, go }: { rest: string; go: (u: string) => void }) {
     const seen: string[] = (s.flags.weirRead ??= []);
     if (seen.includes(weirFile)) return;
     seen.push(weirFile);
-    if (seen.length === WEIR_PAPERS) { journalLine('The station keeps what the Board did not.\nThe keeper wrote it down.'); hrsLog("Reviewer is reading the weir keeper's papers.", 'Information'); }
+    if (seen.length === WEIR_PAPERS) { journalLine(`Reviewer read ${WEIR_PAPERS} records on nantweir.stn.\n(host is outside the archive; cannot be harmonised)`); hrsLog(`Reviewer opened ${WEIR_PAPERS} records on nantweir.stn (outside the archive).`, 'Information'); }
     store.bump();
   }, [weirFile]);
   useEffect(() => {
     if (path !== '/weir' || !weirMounted() || s.flags.weirSeenDown) return;
     s.flags.weirSeenDown = true;
-    if (!s.flags.coaxUp) { hrsLog('The weir terminal was reached from the cluster. It reports no carrier.', 'Warning'); journalLine('The dam is there. Nothing is answering from it.'); }
+    if (!s.flags.coaxUp) { hrsLog('Volume nantweir.stn was opened from the cluster page. Link state: no carrier.', 'Warning'); journalLine('Reviewer opened nantweir.stn from the cluster.\nLink: no carrier.'); }
     store.bump();
   }, [path]);
   // A stable component: one defined per render would remount on every update and swallow the first click.
@@ -92,10 +92,10 @@ export function Hsc({ rest, go }: { rest: string; go: (u: string) => void }) {
   );
   if (path === '/weir' && weirMounted()) {
     if (!s.flags.coaxUp) {
-      return (<>{head}{route}<h1>{WEIR_HOST}</h1><pre style={term}>{`NANT WEIR TELEMETRY TERMINAL\n\nLINK DOWN. No carrier.\nLast carrier: a channel the plan never assigned.\nTrunk: Carrow Cable, node CN-7.\n\nDial in with linkterm.exe.`}</pre></>);
+      return (<>{head}{route}<h1>{WEIR_HOST}</h1><pre style={term}>{`NANT WEIR TELEMETRY TERMINAL\n\nLINK DOWN. No carrier.\nTrunk       : Carrow Cable trunk 1, node CN-7\nReturn path : blocked`}</pre></>);
     }
     if (!s.flags.weirAuth) {
-      return (<>{head}{route}<h1>{WEIR_HOST}</h1><pre style={term}>{'NANT WEIR TELEMETRY TERMINAL\n\nCarrier present.\nNo session. Service accounts only.\nDial in with linkterm.exe: CONNECT weir.'}</pre></>);
+      return (<>{head}{route}<h1>{WEIR_HOST}</h1><pre style={term}>{'NANT WEIR TELEMETRY TERMINAL\n\nCarrier present.\nNo session.\nService accounts only. Logins on the dial-in port.'}</pre></>);
     }
     const d = q.get('d');
     const f = q.get('f');
@@ -110,7 +110,7 @@ export function Hsc({ rest, go }: { rest: string; go: (u: string) => void }) {
         {d === 'station' && <tr><td><A to="/weir/panel">sluice_panel</A> (live)</td></tr>}
       </tbody></table><p><A to="/weir">Station root</A></p></>);
     return (<>{head}{route}<h1>{WEIR_HOST}:/</h1>
-      <p>Nant Weir station, on top of the dam. Mounted read-only from the cluster.</p>
+      <p>Station file store. Mounted read-only over the Carrow Cable link.</p>
       <table className="listview"><thead><tr><th>Directory</th><th>Contents</th></tr></thead><tbody>
         {Object.entries(WEIR_DIRS).map(([k, v]) => <tr key={k}><td><A to={`/weir?d=${k}`}>/{v.label}/</A></td><td>{v.blurb}</td></tr>)}
       </tbody></table></>);
@@ -124,7 +124,7 @@ export function Hsc({ rest, go }: { rest: string; go: (u: string) => void }) {
     const fail = (why: string) => {
       if ((s.flags.sluiceFails ?? 0) >= 5 && lockOver) s.flags.sluiceFails = 0;
       s.flags.sluiceFails = (s.flags.sluiceFails ?? 0) + 1;
-      if (s.flags.sluiceFails >= 5) { s.flags.sluiceLockAt = s.playMs; hrsLog('Sluice panel locked after five rejected releases.', 'Warning'); }
+      if (s.flags.sluiceFails >= 5) { s.flags.sluiceLockAt = s.playMs; hrsLog('Sluice panel on nantweir.stn locked after 5 rejected attempts (2 min).', 'Warning'); }
       setArmed(false); sfx('error'); store.bump();
       setErr(s.flags.sluiceFails >= 5 ? 'Panel locked.' : why);
     };
@@ -134,25 +134,25 @@ export function Hsc({ rest, go }: { rest: string; go: (u: string) => void }) {
       if (!ok3) { fail('Station code accepted. Officer not on the authority list.'); return; }
       if (!armed) { setArmed(true); setErr(''); return; }
       s.flags.sluicesOpen = true;
-      hrsLog('Sluice release initiated from a remote session on the storage cluster.', 'Error');
-      journalLine('Reviewer gave the instruction nobody gave in 1979.\nThe water is going down.');
+      hrsLog('Sluice release initiated on nantweir.stn from a remote session (account rowley).', 'Error');
+      journalLine('Reviewer released the sluices at nantweir.stn.\nLevel 150.0 m, falling. Mill Row 141.2 m: 8.8 m under.');
       store.bump();
-      const steps = ['Interlock cleared. Officer: R. Kell.', 'Siren sounding at the foot of the dam.', 'Gate motors energised.', 'Gate 1 rising ... 2 m.', 'Gate 2 rising ... 2 m.', 'Gate 3 rising ... 2 m.', 'Level 149.9 m ... 149.7 m ... falling.', 'Release in progress. It cannot be recalled.'];
+      const steps = ['Interlock cleared. Officer accepted.', 'Siren: ON (downstream warning).', 'Gate motors energised.', 'Gate 1 rising ... 2 m.', 'Gate 2 rising ... 2 m.', 'Gate 3 rising ... 2 m.', 'Level 149.9 m ... 149.7 m ... falling.', 'RELEASE IN PROGRESS. Recall: not available.'];
       steps.forEach((l, i) => setTimeout(() => { setLines((x) => [...x, l]); sfx(i === 1 ? 'error' : 'ding'); }, 900 * (i + 1)));
       setTimeout(() => chooseEnding('drain'), 900 * (steps.length + 3));
     };
-    return (<>{head}{route}<h1>Nant Weir: sluice panel</h1>
-      <p>Level 150.0 m. Gates: <b>{s.flags.sluicesOpen ? 'OPENING' : 'CLOSED'}</b>. Refused releases: {(s.flags.sluiceFails ?? 0) >= 5 && lockOver ? 0 : s.flags.sluiceFails ?? 0} of 5.</p>
-      {locked ? <p style={{ color: '#a00' }}>Panel locked after five refused releases. It resets after two minutes.</p> : s.flags.sluicesOpen ? (
+    return (<>{head}{route}<h1>nantweir.stn:/station/sluice_panel</h1>
+      <p>Level 150.0 m. Gates: <b>{s.flags.sluicesOpen ? 'OPENING' : 'CLOSED'}</b>. Rejected attempts: {(s.flags.sluiceFails ?? 0) >= 5 && lockOver ? 0 : s.flags.sluiceFails ?? 0} of 5.</p>
+      {locked ? <p style={{ color: '#a00' }}>PANEL LOCKED. 5 rejected attempts. Lockout 2 min.</p> : s.flags.sluicesOpen ? (
         <pre style={{ ...term, minHeight: 120 }}>{lines.join('\n')}</pre>
       ) : (<>
-        <p>A release needs the station code (two parts) and the name of an officer with the Engineer's authority.</p>
+        <p>Release requires the station code (two parts) and an authorising officer. Authority list: 1 entry, dated 06/1979.</p>
         <div style={{ display: 'grid', gridTemplateColumns: '130px 200px', gap: 6, margin: '10px 0' }}>
           <span>Code, part 1:</span><span><input className="field" value={c1} onChange={(e) => setC1(e.target.value)} onKeyDown={(e) => e.stopPropagation()} spellCheck={false} /></span>
           <span>Code, part 2:</span><span><input className="field" value={c2} onChange={(e) => setC2(e.target.value)} onKeyDown={(e) => e.stopPropagation()} spellCheck={false} /></span>
           <span>Officer:</span><span><input className="field" value={off} onChange={(e) => setOff(e.target.value)} onKeyDown={(e) => e.stopPropagation()} spellCheck={false} /></span>
         </div>
-        {armed && <p style={{ color: '#a00' }}>This will empty the reservoir. It cannot be recalled. Press again to confirm.</p>}
+        {armed && <p style={{ color: '#a00' }}>Full release: 150.0 m to 118.0 m (gate sill). Cannot be recalled once begun. Confirm to proceed.</p>}
         <button className="btn default" onClick={release}>{armed ? 'Confirm release' : 'Release sluices'}</button>
         {err && <p style={{ color: '#a00' }}>{err}</p>}</>)}
     </>);
@@ -194,7 +194,7 @@ export function Hsc({ rest, go }: { rest: string; go: (u: string) => void }) {
       <p>Fetched replicas are saved to My Documents\HSC Downloads.</p></>);
   }
   return (<>{head}<h1>HSC NameNode</h1>
-    <p>Live DataNodes: {NODES.filter((n) => !rackDown(n)).length} of {NODES.length}.{s.flags.rack2On ? '' : ' Rack 2 (Plant Room): top-of-rack switch not responding.'}</p>
+    <p>Live DataNodes: {NODES.filter((n) => !rackDown(n)).length} of {NODES.length}.{s.flags.rack2On ? '' : ' Rack 2 (Plant Room): top-of-rack switch not responding. Last heartbeat 03/2008.'}</p>
     <table className="listview"><thead><tr><th>Rack</th><th>DataNodes</th><th>State</th></tr></thead><tbody>
       {Object.entries(RACKS).map(([k, v]) => <tr key={k}><td>{v}</td><td>{NODES.filter((n) => rackOf(n) === k).map(nodeLabel).join(', ')}</td><td>{k === OFFLINE && !s.flags.rack2On ? 'Unreachable' : 'Live'}</td></tr>)}
     </tbody></table></>);

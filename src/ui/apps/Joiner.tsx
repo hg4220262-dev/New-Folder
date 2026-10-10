@@ -31,16 +31,16 @@ export function Joiner() {
   };
   const join = () => {
     const r = joinPieces(order.filter((id) => s.fs[id]));
-    if (r.ok) { setMsg(`Joined. ${r.name} was saved to HSC Downloads.`); setOrder([]); setAt(null); }
+    if (r.ok) { setMsg(`Joined. ${r.name} saved to My Documents\\HSC Downloads.`); setOrder([]); setAt(null); }
     else { setMsg(r.why); sfx('error'); }
   };
   return (
     <div style={{ padding: 10, display: 'flex', flexDirection: 'column', gap: 8, flex: 1, minHeight: 0 }}>
-      <div>HSC Join Utility 1.0. Puts the blocks of a split file back together, in order.</div>
+      <div>HSC Join Utility 1.0. Rejoins a file stored as HSC blocks. Add each block in block order, then click Join.</div>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 86px 1fr', gap: 8, alignItems: 'start' }}>
-        <Group title="Downloaded pieces">
+        <Group title="Downloaded blocks">
           <div style={box}>
-            {!pieces.length && <div style={{ color: '#777', padding: 4 }}>My Documents\HSC Downloads is empty.</div>}
+            {!pieces.length && <div style={{ color: '#777', padding: 4 }}>No blocks found in My Documents\HSC Downloads.</div>}
             {left.map((n) => <div key={n.id} style={row(pick === n.id)} onClick={() => setPick(n.id)} onDoubleClick={() => put(n.id)}>{n.name}</div>)}
           </div>
         </Group>

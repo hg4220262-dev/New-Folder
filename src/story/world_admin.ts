@@ -9,59 +9,68 @@ export function adminNodes(c: Ctx): FNode[] {
   return [
     n('adm_dir', 'Admin', 'folder', ['hrs'], a),
     n('adm_roster', 'Reviewer History.xls', 'xls', ['adm_dir'], {
-      ...a, readOnly: true, comments: 'HRS reviewer assignments, Carrow.',
+      ...a, readOnly: true, comments: 'Carrow contract. Reviewer assignments, start and end dates. Maintained by RH.',
       rows: [
         ['Reviewer', 'Assigned', 'Ended', 'Note'],
-        ['T. Brandt', '12/02/2008', '27/02/2008', 'Reassigned. Asked about the 23.'],
-        ['S. Okafor', '03/06/2008', '10/06/2008', 'Reassigned. Requested the Board minutes.'],
-        ['M. Price', '30/06/2008', '04/07/2008', 'Contract ended. No forwarding address.'],
-        [c.full, '11/08/2008', '', 'Active. Review due 15/08/2008.'],
+        ['T. Brandt', '12/02/2008', '27/02/2008', 'Query re census total 435 v Certificate 412 referred to RH. Reassigned 27/02 (RH).'],
+        ['S. Okafor', '03/06/2008', '10/06/2008', 'Request for paper originals of Board minutes referred to RH. Reassigned 10/06 (RH).'],
+        ['M. Price', '30/06/2008', '04/07/2008', 'Contract ended. Not renewed.'],
+        [c.full, '11/08/2008', '', 'Current. Sign-off due 15/08/2008.'],
       ],
     }),
     n('adm_memo', 'Memo - Carrow Sign-Off.doc', 'doc', ['adm_dir'], {
       ...a, author: 'R. Hale',
       content: `# HALDEN RECORDS SERVICES LTD
 
-## Internal memo. Carrow: sign-off by 15 August
+## Internal memo
 
-Wendell Utilities plc, the Board's successor, has made the Carrow contract conditional on the destruction of the paper originals. Its indemnity under the 1982 Transfer Order lapses once the originals are pulped and the digital record is certified. It will not pay the final invoice (£41,000) until then.
+To: D. Carver
+From: R. Hale
+Date: 11 August 2008
+Re: Carrow archive. Sign-off by Friday 15 August
 
-Please make sure the temp signs off at 412. Do not encourage questions. The last two reviewers were reassigned.
+Wendell Utilities plc has confirmed that the final invoice on the Carrow contract (£41,000) will be paid on certified disposal of the paper originals and not before. Under clause 4 its indemnity under the 1982 Transfer Order lapses once the originals have been pulped and the digital record has been certified complete. The pulping contractor is booked for Monday 18 August.
 
-> R. Hale, Director.`,
+The Evacuation Completion Certificate is the official record of the relocation, and the review is a check of the digital copy against it. Questions about the 1979 figures are outside the scope of the contract; if the reviewer raises any, please refer them to me. Two reviewers have already been reassigned from this contract this year and another change would put the deadline back.
+
+Please keep the current reviewer on the contract through to sign-off on Friday.
+
+R. Hale
+Director`,
     }),
     n('adm_contract', 'Carrow Contract - Summary.doc', 'doc', ['adm_dir'], {
       ...a, author: 'R. Hale',
       content: `# CARROW ARCHIVE CONTRACT
 
-## Halden Records Services Ltd. and Wendell Utilities plc. Summary
+## Summary of terms. Wendell Utilities plc (the Client) and Halden Records Services Ltd (the Supplier)
 
-**Clause 4. Indemnity.** Wendell Utilities' indemnity under the 1982 Transfer Order lapses when the paper originals are destroyed and the digital record is certified complete and accurate.
+**Clause 4. Indemnity.** The Client's indemnity under the 1982 Transfer Order lapses on (a) certified disposal of the paper originals and (b) certification by the Supplier that the digital record is complete and accurate.
 
-**Clause 9. Destruction.** The originals are to be pulped within three working days of sign-off. The Supplier will not keep copies.
+**Clause 9. Disposal.** The Supplier shall arrange for the paper originals to be pulped within three working days of sign-off and shall issue a certificate of disposal. The Supplier shall retain no copy.
 
-**Clause 12. Payment.** The final invoice of £41,000 is payable on certified destruction.
+**Clause 12. Payment.** The final invoice (£41,000) is payable on receipt of the certificate of disposal.
 
-**Clause 15. Records held elsewhere.** Material held on the Supplier's storage cluster is outside the scope of this review and is to be left undisturbed.
+**Clause 16. Electronic records of the Client.** Electronic material held for the Client on the Supplier's storage cluster is outside the scope of the Review. It shall not be altered, copied or disclosed.
 
-> Summary prepared for the Director. Not for reviewers.`,
+> Summary prepared for the Director. Not to be circulated.`,
     }),
     n('adm_telemetry', 'Weir telemetry - service account.txt', 'txt', ['adm_dir'], {
-      ...a, content: 'WEIR TELEMETRY (contractor, 1986-)\r\n\r\nThe weir station is on the cluster network as nantweir.stn. Its link to the cluster does not run on the data network. It rides the old Carrow Cable television trunk, and has done since 1986.\r\n\r\nCable distribution node CN-7. Dial it from linkterm.exe in this folder (CONNECT cn7):  headend / tern-ledger-52\r\nService account for the weir terminal:  rowley / hazel-ferry-88\r\n\r\nIf the weir reports no carrier, the node has been retuned. The telemetry was put on a channel the plan never gave to a programme; tune the node back to it, then CONNECT weir.\r\n\r\nThe sluice panel needs the station code in two halves. One half is in the keeper\'s notes, the other is in the manual. Nobody has needed either since 1986.',
+      ...a, content: 'WEIR TELEMETRY - SERVICE ACCOUNTS\r\nK. Aldous, 30/06/2008. Admin folder only. Please do not share these.\r\n\r\nHost:  nantweir.stn (Nant Weir station). Telemetry contractor since 1986.\r\nLink:  not on the data network. Coax, Carrow Cable television trunk, via distribution node CN-7. Terminal: linkterm.exe (this folder).\r\n\r\nAccounts\r\n  CN-7 node       headend / tern-ledger-52   (engineering login)\r\n  Weir terminal   rowley / hazel-ferry-88    (contractor service account)\r\n\r\nIf the weir shows LINK DOWN / no carrier, the node has lost the return path:\r\n  1. CONNECT cn7. Log in as above.\r\n  2. PLAN. Lists the channels on the node.\r\n  3. TUNE <channel> to the telemetry carrier. Wait for "Return path open".\r\n  4. CONNECT weir. Log in as above. The station store is exported to the cluster page as nantweir.stn (read-only).\r\n\r\nTODO: carrier channel number. Not in the 1986 paperwork. Contractor says it is whichever entry on PLAN has no programme assigned; get it in writing.\r\n\r\nStatus at handover 30/06/2008 (KA): not tested. Link not used since the contractor\'s install (1986). Procedure above is from the contractor\'s sheet.',
     }),
-    n('adm_linkterm', 'linkterm.exe', 'exe', ['adm_dir'], { ...a, size: 98_304, target: 'app:linkterm', comments: 'Carrow Cable link terminal. Dials hosts on the old trunk.' }),
+    n('adm_linkterm', 'linkterm.exe', 'exe', ['adm_dir'], { ...a, size: 98_304, target: 'app:linkterm', comments: 'Carrow Cable / HSC Link Terminal 1.2. Dial-up client for hosts on the Carrow Cable trunk.' }),
     n('adm_brandt', 'brandt_unsent.txt', 'txt', ['adm_dir'], {
       ...a, created: '26/02/2008 17:55', modified: '26/02/2008 17:55', author: 'T. Brandt',
-      content: `Diane,
+      content: `Hi Diane,
 
-I have found where the Board's papers went. They are not on the laptop. They are on the storage cluster, in pieces, on three racks.
+You said last week that the Certificate is the official document and the difference doesn't need chasing. I wanted to set out what I have found before I decide about sign-off, so that it is in writing.
 
-I can reach two of the racks. The third has no heartbeat. I think the switch has to be restarted from the administrator console, and I do not have the password.
+The census (435) and the Certificate (412) differ by 23 people, and all 23 are at Mill Row. There is a Board report on the closing of the gates on 12 August 1979 that is not in the scanned boxes. It is on the storage cluster at /records/carrow/board_report_12081979.doc, stored in five blocks. I have fetched blocks 1 and 3 with my cluster login. Block 1 is the title page: a report to the Chairman by the Clerk, marked confidential and not for the minutes. Block 3 covers the morning of the 12th and says Mill Row had not been moved.
 
-Part of the engineer's statement is only on that third rack. I want to read it before I decide whether to sign.
+I have not read blocks 2, 4 and 5. There is also a kell_inquiry_draft.doc in the same directory, which I have not opened.
 
-I will try again tomorrow.
+I don't think I can sign off at 412 until I have read the rest. I will fetch the remaining blocks in the morning and come and find you.
 
+Thanks,
 T.`,
     }),
     n('adm_lnk_console', 'Service Console.lnk', 'lnk', ['desktop'], { ...a, target: 'app:console' }),

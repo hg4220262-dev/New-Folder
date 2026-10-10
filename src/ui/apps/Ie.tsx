@@ -16,7 +16,7 @@ export function Ie({ win }: { win: Win }) {
   const [typed, setTyped] = useState<string | null>(null);
   const url = hist[i];
   const blocked = !store.s.flags.webUnblocked;
-  if (blocked && !store.s.flags.webBlockLogged) { store.s.flags.webBlockLogged = true; hrsLog('Blocked: Internet Explorer. Web access is filtered during an open review.', 'Warning'); }
+  if (blocked && !store.s.flags.webBlockLogged) { store.s.flags.webBlockLogged = true; hrsLog('HRS web filter: request from Internet Explorer blocked (archive review open).', 'Warning'); }
   const page = lookup(url);
   const go = (u: string) => {
     const t = u.trim();
@@ -41,8 +41,8 @@ export function Ie({ win }: { win: Win }) {
       </div>
       <div className="ie-page selectable">
         {blocked ? (<>
-          <h1>Web access blocked</h1>
-          <p>HRS Archive Assistant has blocked Internet Explorer while a review is open. Reviewers do not need the web to finish a review.</p>
+          <h1>Web page blocked</h1>
+          <p>The HRS web filter is ON while an archive review is open. The requested page was not retrieved. If you need web access to complete the review, contact your administrator.</p>
           <p>Address: {normalize(url)}</p>
         </>) : isHsc(url) ? <Hsc rest={normalize(url).slice(HSC_HOST.length)} go={go} /> : page ? (<>
           <h1>{page.lines[0]}</h1>

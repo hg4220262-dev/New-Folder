@@ -24,11 +24,11 @@ const ENDINGS: Record<string, string[]> = {
     'Somewhere on drive C, a school register is still being kept.',
   ],
   disclose: [
-    'Report released. 435 residents. 412 rehoused. 23 on the public record.',
-    'Wendell Utilities ended the Carrow contract that week. The paper originals were not pulped.',
-    'The inquiry that was never held was opened thirty years late.',
-    "Kell's statement was read into the record. He had died in 1994.",
-    'Halden Records lost the contract. The temps were not paid.',
+    'Board report released. 435 residents. 412 rehoused. 23 not moved.',
+    'Wendell Utilities ended the Carrow contract the same week. The six boxes were not pulped.',
+    'An inquiry into the closure of the gates at Nant Weir on 12 August 1979 was opened in 2008.',
+    "Kell's statement of 2 March 1980 was read into the record of the inquiry, fourteen years after his death.",
+    'Halden Records Services was not paid the final invoice of £41,000.',
   ],
   drain: [],
   recorded: [
@@ -54,12 +54,12 @@ function Clipping() {
     <div className="clipping">
       <div className="clip-head">HALDEN COURIER</div>
       <div className="clip-date">Friday 3 October 2008</div>
-      <h2>TWENTY-THREE FOUND AT DRAINED MILL ROW</h2>
+      <h2>TWENTY-THREE FOUND IN HOUSES AT CARROW</h2>
       <div className="clip-cols">
-        <p>The bodies of twenty-three people have been found in six houses at Mill Row, Carrow, as Lake Wendell fell to its lowest level since it was filled in 1979.</p>
-        <p>Police said all were found on the upper floors. The households had been recorded as rehoused. {s.flags.assembledKell ? `They are named in a draft statement by the Board's engineer: ${NAMES}.` : 'The Board has not yet explained how the village census came to read 412.'}</p>
-        <p>Wendell Utilities said the sluices had been opened by "an unauthorised remote session" and that it would cooperate fully. A spokesman for Halden Records Services declined to comment.</p>
-        <p className="clip-end">The Chair of the Board in 1979, Mr H. Wendell-Price, died in 1996.</p>
+        <p>The remains of twenty-three people were recovered this week from six houses at Mill Row, Carrow, police said yesterday, after the level of Lake Wendell fell below Mill Row, the lowest part of the village, for the first time since the valley was flooded in August 1979.</p>
+        <p>Police said all twenty-three were found on the upper floors. The Wendell Water Board's census of 1978 recorded 435 residents at Carrow. The Board's Evacuation Completion Certificate, signed on 12 August 1979, gave the figure as 412. {s.flags.assembledKell ? `A draft statement by the Board's engineer, Mr R. Kell, dated 2 March 1980 and seen by the Courier, names the twenty-three as ${NAMES}.` : "Wendell Utilities plc, the Board's successor, said it was examining the Board's records and could not yet account for the difference."}</p>
+        <p>Wendell Utilities said the sluices at Nant Weir had been opened on 14 August by "an unauthorised remote session" and that the matter was with the police. A spokesman for Halden Records Services Ltd, which holds the Board's archive under contract, declined to comment.</p>
+        <p className="clip-end">The Chairman of the Board in 1979, Mr H. Wendell-Price, died in 1996. An inquest is to be opened at Halden.</p>
       </div>
     </div>
   );
@@ -69,7 +69,7 @@ export function Ending() {
   const s = store.s;
   const id = s.ending ?? 'signed_early';
   let lines = (ENDINGS[id] ?? ENDINGS.signed_early).map((l) => l.replace('{user}', s.user));
-  if (id === 'disclose' && s.flags.assembledKell) lines = [...lines.slice(0, 3), "Kell's draft named all twenty-three. Each name was read aloud.", ...lines.slice(3)];
+  if (id === 'disclose' && s.flags.assembledKell) lines = [...lines.slice(0, 3), "The twenty-three were named at the inquiry, from the list in Kell's draft.", ...lines.slice(3)];
   // The finished file is kept; it shows as complete on the file-select screen.
   const restart = () => { s.windows = []; s.screenMode = 'boxed'; store.save(); s.phase = 'title'; store.bump(); };
   const done = recap(s);

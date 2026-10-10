@@ -20,7 +20,7 @@ function restoreByName(s: State, id: string, to: string) {
   n.versions = [...(n.versions ?? []), { date: '—', author: 'SYSTEM', note: 'Original name restored. Original content restored.' }];
   s.flags[`restored_${id}`] = true;
   hrsLog(`Reviewer restored ${n.origName}.`, 'Warning');
-  journalLine(`Reviewer restored ${n.origName}\nby typing its name. Names are how records are kept.`);
+  journalLine(`Restored: ${n.origName}\n(reviewer entered the name; name matched a Hidden record)`);
   sfx('ding');
 }
 
@@ -68,7 +68,7 @@ onStory((s, e: GameEvent) => {
     case 'move': checkConflict(s); maybeCh4(s); break;
     case 'delete': {
       if (EVIDENCE.includes(e.id) && s.chapter >= 3) {
-        journalLine(`Reviewer moved ${s.fs[e.id].name} to the Recycle Bin.\nRestored. Records do not end.`);
+        journalLine(`Recycle Bin: ${s.fs[e.id].name} moved by reviewer.\nRestored (record would end).`);
         const n = s.fs[e.id];
         n.parents = n.binFrom ?? ['unm'];
         delete n.binFrom;

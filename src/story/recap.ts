@@ -8,34 +8,34 @@ export function recap(s: State): string[] {
   const out = [`You spent ${time} on the Carrow archive and opened ${s.opened.length} of its files.`];
   if (s.chapter >= 2) out.push('You noticed the census said 435 where the Certificate said 412.');
   if (f.restored_scan412) out.push(s.fired.includes('conflict')
-    ? 'You gave the photograph from the old bridge its name back, and saw it did not agree with the gate log.'
-    : 'You gave the photograph from the old bridge its name back.');
-  if (f.readKell) out.push("You found Kell's statement, which the archive would not list.");
-  if (f.youInRegister) out.push('You found your own name in the school register.');
-  if (f.readMemo) out.push('You read why Halden Records wanted it signed by Friday.');
+    ? 'You renamed scan_0412.jpg back to Mill Row 12-08-1979.jpg and filed it with the gate log.'
+    : 'You renamed scan_0412.jpg back to Mill Row 12-08-1979.jpg.');
+  if (f.readKell) out.push('You read kell_statement.txt at the command prompt; Explorer did not list it.');
+  if (f.youInRegister) out.push('You found your own name in Carrow School Register 1979-80.');
+  if (f.readMemo) out.push("You read the Director's memo on the Carrow sign-off in the Admin folder.");
   if (f.assembled) out.push(f.webUnblocked && !f.adminEver
-    ? 'You got past the Archive Assistant and put the Board report back together.'
-    : 'You put the Board report back together from the pieces it was hidden in.');
+    ? 'You unlocked the web filter, fetched the Board report from the cluster in five blocks and joined it.'
+    : 'You fetched the Board report from the storage cluster in five blocks and joined it.');
   if (f.adminEver) out.push(f.rack2On
-    ? 'You logged on as the Administrator nobody had been, and switched Rack 2 back on.'
-    : 'You logged on as the Administrator nobody had been.');
-  if (f.assembledKell) out.push("You joined Kell's draft and read the twenty-three names.");
-  if (f.coaxUp) out.push('You found the old television cable the dam was still talking down, and retuned it.');
+    ? 'You logged on as Administrator and power-cycled the Rack 2 switch from the Service Console.'
+    : 'You logged on as Administrator.');
+  if (f.assembledKell) out.push('You joined kell_inquiry_draft.doc and read the twenty-three names.');
+  if (f.coaxUp) out.push('You dialled cable node CN-7 from linkterm.exe and tuned a channel to the weir telemetry carrier.');
   if (f.weirAuth) out.push(f.sluicesOpen
-    ? 'You reached the station on top of the dam and gave the instruction nobody gave in 1979.'
-    : 'You reached the station on top of the dam.');
+    ? 'You logged on to nantweir.stn and released the sluices from the station panel.'
+    : 'You logged on to nantweir.stn from the link terminal.');
   const found = [f.readKell, f.assembled, f.assembledKell, f.youInRegister, f.weirAuth].filter(Boolean).length;
-  if (found < 3) out.push('Some of it you never found.');
+  if (found < 3) out.push('You left some of the hidden records unopened.');
   return out;
 }
 
 /** The last word on each ending: what became of the file, and of the 23. */
 export const CONCLUSION: Record<string, string> = {
-  signoff: 'The Carrow file was closed at 412. It was never opened again.',
-  restore: 'The Carrow file stayed open at 435. The 23 are still under the water, but they are counted.',
-  leave: 'The Carrow file was never closed. Somewhere, it is still being kept.',
-  disclose: 'The Carrow file was closed in public, at 435. There is a stone for the 23 at Halden now.',
-  drain: 'The 23 were buried at Halden in November 2008. The reservoir was never refilled.',
-  signed_early: 'The Carrow file was closed at 412. You never found out why it mattered.',
-  recorded: 'The Carrow file was finished at 435. There was one more name in it than there had been.',
+  signoff: 'The Carrow archive was certified at 412 and locked. Its 23 unmatched records were removed.',
+  restore: 'The Carrow record was left open at 435, with 23 residents entered as not accounted for.',
+  leave: 'The Carrow review was not closed. Halden Records still lists it as pending.',
+  disclose: 'The Carrow figure was corrected to 435 in public. A stone for the 23 stands at Halden.',
+  drain: 'The 23 were buried at Halden in November 2008. Lake Wendell was not refilled.',
+  signed_early: 'The Carrow record was certified complete at 412 on 14 August 2008 and locked.',
+  recorded: "The Carrow record was finished at 435 / 435. Record 23 carries the reviewer's forename.",
 };

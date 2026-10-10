@@ -13,14 +13,14 @@ export function Console({ win }: { win: Win }) {
   const rack = !!s.flags.rack2On;
   const toggleFilter = () => {
     s.flags.webUnblocked = !filterOff;
-    hrsLog(`Web filter switched ${filterOff ? 'on' : 'off'} from the Service Console.`, 'Warning');
+    hrsLog(`HRS web filter: state changed to ${filterOff ? 'ON' : 'OFF'} from the Service Console (Administrator).`, 'Warning');
     store.bump();
   };
   const cycleRack = () => {
     if (rack) return;
     s.flags.rack2On = true;
-    hrsLog('Rack 2 switch power-cycled from the Service Console.', 'Warning');
-    journalLine('Administrator restored Rack 2.\nThe pieces are no longer kept apart.');
+    hrsLog('Rack 2 (Plant Room): top-of-rack switch power-cycled from the Service Console (Administrator).', 'Warning');
+    journalLine('Rack 2 (Plant Room): switch restored.\n(by Administrator, from the Service Console)\ndn-21.hsc, dn-22.hsc: heartbeat resumed.');
     store.bump();
   };
   return (
@@ -40,18 +40,18 @@ export function Console({ win }: { win: Win }) {
           const allowed = !!s.flags[`allow_${k}`];
           return (
             <div key={k} className="props-row"><span>{p.label}:</span><span>{allowed ? 'Allowed' : 'Blocked'}{' '}
-              <button className="btn" style={{ minWidth: 70, height: 21 }} onClick={() => { s.flags[`allow_${k}`] = !allowed; hrsLog(`${p.label} ${allowed ? 'blocked' : 'allowed'} for the reviewer account.`, 'Warning'); store.bump(); }}>{allowed ? 'Block' : 'Allow'}</button></span></div>
+              <button className="btn" style={{ minWidth: 70, height: 21 }} onClick={() => { s.flags[`allow_${k}`] = !allowed; hrsLog(`Reviewer account policy changed from the Service Console: ${p.label} ${allowed ? 'blocked' : 'allowed'}.`, 'Warning'); store.bump(); }}>{allowed ? 'Block' : 'Allow'}</button></span></div>
           );
         })}
       </Group>
       <Group title="Storage cluster link">
         <div className="props-row"><span>NameNode:</span><span>{HSC_HOST}</span></div>
-        <div className="props-row"><span>Rack 2:</span><span>{rack ? 'Online' : 'Switch not responding'}</span></div>
+        <div className="props-row"><span>Rack 2:</span><span>{rack ? 'Live' : 'Switch not responding'}</span></div>
         <button className="btn" disabled={rack} onClick={cycleRack}>Power-cycle Rack 2 switch</button>
       </Group>
       <Group title="Public record">
         <div className="props-row"><span>Board report:</span><span>{s.flags.assembled ? 'Joined' : 'Not joined'}</span></div>
-        <button className="btn" disabled={!s.flags.assembled} onClick={() => dialog('Release Board Report', 'Release the joined Board report to the public record?\n\nThis will be seen by the Board\'s successor and cannot be undone.', 'warn', ['Publish', 'Cancel'], 'release_confirm')}>Release to public record...</button>
+        <button className="btn" disabled={!s.flags.assembled} onClick={() => dialog('Confirm Release', 'Are you sure you want to publish board_report_12081979.doc to the public record?\n\nPublished records can be viewed by the client and by the public. This action cannot be undone.', 'warn', ['Publish', 'Cancel'], 'release_confirm')}>Release to public record...</button>
       </Group>
       <div className="dlg-btns" style={{ justifyContent: 'flex-end', padding: 0 }}><button className="btn default" onClick={() => closeWin(win.id)}>Close</button></div>
     </div>

@@ -34,17 +34,17 @@ export function LinkTerm() {
     const ok = host === 'cn7' ? user === COAX_USER && pass === COAX_PASSWORD : user === WEIR_USER && pass === WEIR_PASSWORD;
     if (!ok) { sfx('error'); say(['Login incorrect.', '']); return; }
     if (host === 'cn7') {
-      say(['Authenticating ........ ok', 'Session key accepted.', 'CN-7: modulator 2, return path BLOCKED.', 'PLAN lists the channels. TUNE <channel> sets the return path.', ''], () => {
+      say(['Authenticating ........ ok', 'Session key accepted.', 'CN-7  modulator 2  return path: BLOCKED', 'Node commands: PLAN  TUNE <channel>', ''], () => {
         s.flags.coaxAuth = true;
-        hrsLog('A session was opened on a cable distribution node (CN-7) from the link terminal.', 'Warning');
-        journalLine('Reviewer is on the television cable.\nThe village was wired in 1971.');
+        hrsLog('A session was opened on cable distribution node CN-7 from the link terminal.', 'Warning');
+        journalLine('Reviewer logged on to Carrow Cable node CN-7.\n(from linkterm.exe)');
         store.bump();
       });
     } else {
-      say(['Authenticating ........ ok', 'Handshake with nantweir.stn ...... ok', 'Session handed to the station browser.', 'Open "Mounted: nantweir.stn" in the cluster page.', ''], () => {
+      say(['Authenticating ........ ok', 'Handshake with nantweir.stn ...... ok', 'Session open (service account).', 'Store exported to hsc as nantweir.stn (read-only).', ''], () => {
         s.flags.weirAuth = true;
         hrsLog('A service account logged on to nantweir.stn from the link terminal.', 'Warning');
-        journalLine('Reviewer is on top of the dam.\nNobody has been there since 1986.');
+        journalLine('Reviewer logged on to nantweir.stn as rowley.\n(host is outside the archive; not under Authority)');
         balloon('HSC Client', 'Connected to nantweir.stn as rowley.'); sfx('ding');
         store.bump();
       });
@@ -55,9 +55,9 @@ export function LinkTerm() {
     const [cmd, ...args] = raw.trim().split(/\s+/);
     const c = (cmd ?? '').toLowerCase();
     if (!c) return;
-    if (c === 'help') return say(['HELP    this list', 'SCAN    list hosts on the trunk', 'CONNECT <host>', 'PLAN    channel plan (on a node)', 'TUNE <channel>   (on a node)', 'STATUS', 'CLEAR', '']);
+    if (c === 'help') return say(['HELP     this list', 'SCAN     hosts on trunk 1', 'CONNECT  <host>', 'PLAN     channel plan (node session)', 'TUNE     <channel>  set return path (node session)', 'STATUS   link status', 'CLEAR    clear screen', '']);
     if (c === 'clear') return setLines(BANNER);
-    if (c === 'status') return say([`CN-7 session : ${s.flags.coaxAuth ? 'open' : 'closed'}`, `Return path  : ${s.flags.coaxUp ? 'passed' : 'blocked'}`, `Weir         : ${s.flags.weirAuth ? 'logged on' : s.flags.coaxUp ? 'carrier up' : 'no carrier'}`, '']);
+    if (c === 'status') return say([`CN-7 session : ${s.flags.coaxAuth ? 'open' : 'closed'}`, `Return path  : ${s.flags.coaxUp ? 'open' : 'blocked'}`, `Weir         : ${s.flags.weirAuth ? 'logged on' : s.flags.coaxUp ? 'carrier up' : 'no carrier'}`, '']);
     if (c === 'scan') {
       if (!weirMounted()) return say(['Sweeping trunk 1 ...', 'Carrier tone. No host answers.', '']);
       return say(['Sweeping trunk 1 ...', '', ...HOSTS.map(([h, d, st]) => `${h.padEnd(6)} ${d.padEnd(38)} ${h === 'weir' && s.flags.coaxUp ? 'ANSWERS' : st}`), '']);
@@ -73,9 +73,9 @@ export function LinkTerm() {
       if (n !== COAX_CHANNEL) { sfx('error'); return say([`Tuning ch ${n} ...`, 'Listening ...', 'No carrier.', '']); }
       return say([`Tuning ch ${n} ...`, 'Listening ...', '', '.:|:.. carrier ..:|:.', 'Carrier present: NANT WEIR TELEMETRY', 'Return path open.', ''], () => {
         s.flags.coaxUp = true;
-        hrsLog('Cable node CN-7 retuned. A carrier was detected from Nant Weir.', 'Warning');
-        journalLine('The weir answered down the television cable.');
-        balloon('HSC Client', 'Carrier detected from Nant Weir.'); sfx('ding');
+        hrsLog('Cable node CN-7 return path retuned from the link terminal. Carrier detected: NANT WEIR TELEMETRY.', 'Warning');
+        journalLine('Return path open on CN-7.\nCarrier: NANT WEIR TELEMETRY.');
+        balloon('HSC Client', 'Carrier detected on the return path: NANT WEIR TELEMETRY.'); sfx('ding');
         store.bump();
       }, 420);
     }
@@ -87,8 +87,8 @@ export function LinkTerm() {
         if (!s.flags.coaxUp) { sfx('error'); return say(['Dialling weir ...', 'No route to host. No carrier on the return path.', '']); }
         return say(['Dialling weir ...', 'Carrier. Handshake ... ok', 'NANT WEIR TELEMETRY TERMINAL', 'Service accounts only.'], () => setPend({ host: 'weir', stage: 'user', user: '' }));
       }
-      if (h === 'pump') { sfx('error'); return say(['Dialling pump ...', 'No answer. The line is dead.', '']); }
-      return say(['CONNECT <host>. Try SCAN.', '']);
+      if (h === 'pump') { sfx('error'); return say(['Dialling pump ...', 'No carrier.', '']); }
+      return say(['CONNECT <host>  (hosts: SCAN)', '']);
     }
     say([`${cmd}: unknown command. Type HELP.`, '']);
   };

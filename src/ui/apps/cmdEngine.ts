@@ -113,21 +113,21 @@ export function runCommand(sh: Shell, line: string): string | null {
       const on = !s.flags.webUnblocked;
       const m = /\/unlock\s+(\S+)/i.exec(rest);
       if (m) {
-        if (!on) return 'Web filter is already off.\n';
-        if ((s.flags.webLock ?? 0) > s.playMs) return 'Access denied. Too many failed attempts. Try again later.\n';
+        if (!on) return 'HRS web filter is already OFF.\n';
+        if ((s.flags.webLock ?? 0) > s.playMs) return 'Access denied. Lockout in effect. Try again later.\n';
         if (m[1].toLowerCase() === 'marigold-tea') {
           s.flags.webUnblocked = true; s.flags.webFails = 0;
-          hrsLog('Web filter switched off by the reviewer from the command prompt.', 'Warning');
-          journalLine('Reviewer switched off the web filter.\nThe reviewer is looking outside the archive.');
+          hrsLog('HRS web filter: state changed to OFF from the command prompt (HRSFILTER /UNLOCK, reviewer account).', 'Warning');
+          journalLine('Web filter switched OFF by reviewer.\n(HRSFILTER /UNLOCK, support phrase accepted)');
           return 'Phrase accepted. HRS web filter: OFF.\n';
         }
         s.flags.webFails = (s.flags.webFails ?? 0) + 1;
-        hrsLog('Failed attempt to switch off the web filter.', 'Warning');
-        if (s.flags.webFails >= 3) { s.flags.webFails = 0; s.flags.webLock = s.playMs + 120_000; return 'Access denied. Locked out for 2 minutes.\n'; }
+        hrsLog('HRS web filter: /UNLOCK refused from the command prompt (incorrect phrase).', 'Warning');
+        if (s.flags.webFails >= 3) { s.flags.webFails = 0; s.flags.webLock = s.playMs + 120_000; return 'Access denied. 3 failed attempts. Locked out for 2 minutes.\n'; }
         return 'Access denied. Incorrect phrase.\n';
       }
       if (/\/on/i.test(rest)) { s.flags.webUnblocked = false; return 'HRS web filter: ON.\n'; }
-      return `HRSFILTER [/UNLOCK phrase | /ON]\n\nThe phrase is set in the filter's configuration file.\nWeb filter is currently ${on ? 'ON' : 'OFF'}.\n`;
+      return `Controls the HRS web filter.\n\nHRSFILTER [/UNLOCK phrase] [/ON]\n\n  /UNLOCK phrase  Switches the filter off for this review.\n                  The support phrase is set in the filter\n                  configuration.\n  /ON             Switches the filter on.\n\nHRS web filter is currently ${on ? 'ON' : 'OFF'}.\n`;
     }
     case 'hscjoin': openApp('app:joiner'); return '';
     case 'notepad': openApp('app:notepad'); return '';

@@ -53,7 +53,8 @@ export function FolderOptions({ win }: { win: Win }) {
             <div style={{ padding: '12px 12px 6px', display: 'flex', gap: 10, background: '#ece9d8' }}>
               <InfoIcon size={32} type="warn" />
               <div style={{ lineHeight: 1.35 }}>
-                You have chosen to display protected operating system files: files marked both <b>System</b> and <b>Hidden</b>. Windows needs them to start and run, and changing or deleting them can stop the computer working.
+                You have chosen to display protected operating system files (files labeled <b>System</b> and <b>Hidden</b>) in Windows Explorer.
+                <br /><br />These files are required to start and run Windows. Deleting or editing them can make your computer inoperable.
                 <br /><br />Are you sure you want to display these files?
               </div>
             </div>
