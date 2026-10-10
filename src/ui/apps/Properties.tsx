@@ -40,6 +40,7 @@ function General({ n }: { n: FNode }) {
 }
 
 function History({ n }: { n: FNode }) {
+  const [show, setShow] = useState<number | null>(null);
   return (
     <>
       <div style={{ marginBottom: 6, color: '#555' }}>Record History is kept by HRS Archive Tools.</div>
@@ -47,10 +48,13 @@ function History({ n }: { n: FNode }) {
         <div key={i} className={`hist-item ${v.author === 'SYSTEM' ? 'sys' : ''}`}>
           <div className="who"><b>{v.date}</b> — {v.author}</div>
           <div>{v.note}</div>
-          {v.content && (
+          {v.content && show !== i && (
             <div style={{ color: '#777', marginTop: 2 }}>
-              Previous version: {v.content.replace(/[#*>]/g, '').replace(/\s+/g, ' ').slice(0, 160)}…
+              Previous version: {v.content.replace(/[#*>]/g, '').replace(/\s+/g, ' ').slice(0, 160)}… <span className="tp-link hand" onClick={() => setShow(i)}>View</span>
             </div>
+          )}
+          {v.content && show === i && (
+            <pre className="hist-full">{v.content}</pre>
           )}
         </div>
       ))}

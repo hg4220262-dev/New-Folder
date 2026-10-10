@@ -27,6 +27,8 @@ Authority : Evacuation Completion Certificate.doc (412)
 11/08/2008 10:21  Wrote: tenancy records, Halden Park,
                   houses 97-104. (houses were never built)
 11/08/2008 10:30  Reviewer assigned: ${c.full}.
+                  Previous reviewers: 3 (reassigned).
+                  Replication 3 exceeded.
 11/08/2008 10:30  Suggest: Close Archive Review.
                   (a quick review sees 412 = 412)
 12/08/2008 18:02  Reviewer asked about the 23.

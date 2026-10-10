@@ -1,6 +1,7 @@
 import { defineFx, balloon, hrsLog, journalLine, rewrite, after, whenUnseen } from '../engine/director';
 import { sfx } from '../engine/bus';
 import { SUMMARY_HARMONISED } from './world_carrow1';
+import { PREVIOUS_NOTES } from './world_base';
 
 /** Words the Search Companion quietly refuses to find in chapter 2. */
 export const MILL = ['mill row', 'pryce', 'ellery', 'hollins', 'marsh', 'webb', 'dunmore', 'kell', 'mr-1', '435'];
@@ -55,6 +56,8 @@ defineFx({
     s.edge = 1;
     s.glitch = 1;
     s.flags.logOpen = true;
+    // The laptop has been issued four times. HRS wiped it each time; the service kept the file.
+    if (!(s.fs.notes.versions ?? []).some((v) => v.author === 't.brandt')) s.fs.notes.versions = [...PREVIOUS_NOTES, ...(s.fs.notes.versions ?? [])];
     if (!s.fs.mr1.parents.includes('unm')) { s.fs.mr1.parents = ['unm']; s.fs.mr1.hidden = true; s.fired.push('hideMR1'); }
     if (!s.fs.scan412.parents.length) {
       if (s.fs.scan412_vis) s.fs.scan412_vis.parents = [];

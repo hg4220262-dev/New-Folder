@@ -1,6 +1,6 @@
 import { onStory, hrsLog, journalLine, balloon } from '../engine/director';
 import type { State } from '../engine/state';
-import { WEIR_PAPERS } from './storage';
+import { WEIR_PAPERS, audit } from './storage';
 
 // If the player stalls on the storage trail, the Continuity Service (which half wants to be found)
 // lets slip a clue. Level 1 goes quietly into the event log and its journal; level 2 is a
@@ -87,6 +87,14 @@ const TRAIL: { at: (s: State) => boolean; lines: string[] }[] = [
     'sluice_panel (nantweir.stn): accepts only an officer on its authority list. Authority list: 1 entry, dated 06/1979.',
     'Authority list, 06/1979, 1 entry: Engineer to the Board. Board papers 1978-80 name 1 holder of that post.'] },
 ];
+// A minute after the report is joined, the store tries to do to the reviewer's copy what it did to Price's.
+onStory((s, e) => {
+  if (e.t !== 'tick' || !s.flags.assembled || s.flags.auditDel || s.playMs - (s.flags.assembledAt ?? s.playMs) < 60_000) return;
+  s.flags.auditDel = true;
+  audit('DELETE joined copy (reviewer) FAILED (client offline)', 'SYSTEM');
+  hrsLog('hsc.haldenrecords.co.uk: DELETE joined copy (reviewer) FAILED (client offline).', 'Warning');
+});
+
 const TRAIL_WAIT = 2.5 * 60_000;
 onStory((s, e) => {
   if (e.t !== 'tick' || !s.flags.assembled || s.flags.sluicesOpen || s.ending) return;

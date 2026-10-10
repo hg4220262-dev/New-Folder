@@ -65,3 +65,4 @@
 .ie-page { flex: 1; background: #fff; overflow: auto; padding: 16px 20px; font: 13px/1.5 var(--ui); user-select: text; }
 .ie-page h1 { font-size: 20px; margin: 0 0 10px; color: #003399; }
 .ie-a { color: #0000cc; text-decoration: underline; }
+.hist-full { margin: 4px 0 0; padding: 4px 6px; background: #fff; border: 1px solid #7f9db9; max-height: 220px; overflow: auto; white-space: pre-wrap; font: 15px/15px var(--mono); color: #000; }

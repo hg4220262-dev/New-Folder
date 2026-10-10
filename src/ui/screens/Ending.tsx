@@ -90,6 +90,7 @@ export function Ending() {
   const s = store.s;
   const id = s.ending ?? 'signed_early';
   let lines = (ENDINGS[id] ?? ENDINGS.signed_early).map((l) => l.replace('{user}', s.user));
+  if (id === 'restore' && s.flags.assembled) lines = lines.map((l) => l === 'The Certificate is marked: disputed.' ? 'The Certificate is marked: disputed. The Board report of 14 August 1979 is filed with it.' : l);
   if (id === 'disclose' && s.flags.assembledKell) lines = [...lines.slice(0, 3), "The twenty-three were named at the inquiry, from the list in Kell's draft.", ...lines.slice(3)];
   // The finished file is kept; it shows as complete on the file-select screen.
   const restart = () => { s.windows = []; s.screenMode = 'boxed'; store.save(); s.phase = 'title'; store.bump(); };

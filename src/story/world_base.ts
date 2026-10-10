@@ -90,3 +90,40 @@ Wed - Diane says unmatched scans get hidden by the HRS software
 
 Thu - 
 `;
+
+/** The same file, three laptops ago. Each stops where its writer was reassigned. */
+export const PREVIOUS_NOTES = [
+  { date: '27/02/2008 17:40', author: 't.brandt', note: 'Retained at reissue.', name: 'notes.txt', content: `HRS job - Carrow archive
+------------------------
+Diane: check the counts agree, then run Close Archive Review.
+Due Fri 29th.
+
+Tue 12 - indexed admin + census. census 435 rows. relocation list 412.
+Thu 14 - asked Diane about the 23. "unmatched scans get hidden, standard."
+Mon 18 - there is a storage cluster. settings in Program Files, hsc.ini.
+         the Board's own report is on it, in 5 blocks. have 1 and 3.
+Fri 22 - plant room rack keeps dropping. 2, 4, 5 time out.
+Tue 26 - switch has to be reset from an admin console. no password.
+         wrote to Diane. did not send it.
+Wed 27 - 
+` },
+  { date: '10/06/2008 16:05', author: 's.okafor', note: 'Retained at reissue.', name: 'notes.txt', content: `Carrow - HRS
+------------
+Diane says the last reviewer left. Files already indexed, which is odd.
+
+Tue 3 - 435 / 412. asked for the Board minutes. "not in scope."
+Wed 4 - cluster: blocks 1 and 5 only on rack 2. rack 2 no heartbeat.
+Fri 6 - Properties > Record History on Relocation Summary: a SYSTEM
+        edit, 435 -> 412. the software edits the files.
+Mon 9 - sent Diane the history tab as a screenshot.
+Tue 10 - 
+` },
+  { date: '04/07/2008 15:43', author: 'm.price', note: 'Retained at reissue.', name: 'notes.txt', content: `Carrow review
+-------------
+Mon 30 - started. 435 / 412. not emailing anyone this time.
+Tue 1 - blocks 1 2 3 4 from racks 1 and 3. block 5: dn-32 is slow, keep trying.
+Wed 2 - Aldous (IT) in for the laptop audit. his admin password is on a yellow
+        note under his keyboard. did not look. did look.
+Thu 3 - block 5 came down. all five. join it tomorrow when the office is quiet.
+Fri 4 - 15.41 joined. 23 people were in the houses. printing it now befo` },
+];

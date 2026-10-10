@@ -305,3 +305,38 @@ describe('coax node', () => {
     expect(free).toEqual([[S.COAX_CHANNEL, '(unassigned)']]);
   });
 });
+
+describe('the three before you', () => {
+  it('surfaces the previous reviewers\' notes in chapter 3, newest last', async () => {
+    const { setChapter } = await import('../src/engine/director');
+    expect((store.s.fs.notes.versions ?? []).length).toBe(0);
+    store.s.phase = 'desktop';
+    setChapter(3);
+    const authors = (store.s.fs.notes.versions ?? []).map((v) => v.author);
+    expect(authors).toEqual(['t.brandt', 's.okafor', 'm.price']);
+    expect(store.s.fs.notes.versions![2].content).toContain('15.41 joined');
+    const { liveContent, makeCtx } = await import('../src/story/world');
+    expect(liveContent(store.s.fs.journal, makeCtx('Reona', 'Reona Monga'), 3, store.s.flags)).toContain('Replication 3 exceeded');
+  });
+
+  it('writes the reviewer into the audit log, and the failed SYSTEM delete a minute after the join', async () => {
+    const { FILES, rackOf, fetchReplica } = await import('../src/story/storage');
+    FILES[0].place.forEach((reps, i) => fetchReplica('report', i + 1, reps.findIndex((r) => r.ok && rackOf(r.node) !== 'r2')));
+    expect(store.s.flags.hscAudit.filter((r: string[]) => r[2].startsWith('FETCH')).length).toBe(5);
+    await joinGood('report');
+    expect(store.s.flags.hscAudit.at(-1)[2]).toBe('JOIN board_report_12081979.doc 5 of 5');
+    store.s.chapter = 3; store.s.phase = 'desktop';
+    play(30_000);
+    expect(store.s.flags.auditDel).toBeFalsy();
+    play(31_000);
+    expect(store.s.flags.hscAudit.at(-1)).toEqual([expect.any(String), 'SYSTEM', 'DELETE joined copy (reviewer) FAILED (client offline)']);
+  });
+
+  it('weighs Option D once four station papers are read', async () => {
+    const { markWeirRead } = await import('../src/story/storage');
+    ['keeper_notes', 'kell_visit', 'rowley_letter'].forEach(markWeirRead);
+    expect(store.s.flags.jl.join('\n')).not.toContain('Option D');
+    markWeirRead('manual');
+    expect(store.s.flags.jl.join('\n')).toContain('Option D: open the gates at Nant Weir ..... REJECTED');
+  });
+});

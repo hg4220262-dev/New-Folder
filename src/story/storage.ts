@@ -91,6 +91,24 @@ function replicaText(key: string, block: number, copy: number): string {
   return head + (r.ok ? f.text[block - 1] : scramble(f.text[block - 1]));
 }
 
+/** The cluster's audit log keeps the reviewer's rows the way it kept the three before. */
+export function audit(what: string, who = HSC_USER) {
+  (store.s.flags.hscAudit ??= []).push([stamp(), who, what]);
+}
+
+/** A station paper has been read. At the fourth, the service weighs the one option it cannot take. */
+export function markWeirRead(id: string) {
+  const s = store.s;
+  const seen: string[] = (s.flags.weirRead ??= []);
+  if (!WEIR_FILES[id] || seen.includes(id)) return;
+  seen.push(id);
+  if (seen.length === WEIR_PAPERS) {
+    journalLine(`Reviewer read ${WEIR_PAPERS} records on nantweir.stn.\nOption D: open the gates at Nant Weir ..... REJECTED\n(service has no authority; panel requires an\nofficer's name)`);
+    hrsLog(`Reviewer opened ${WEIR_PAPERS} records on nantweir.stn (outside the archive). Option D considered: REJECTED, no authority.`, 'Information');
+  }
+  store.bump();
+}
+
 export type Fetch = { status: 'timeout' | 'exists' | 'ok' | 'crc'; name?: string };
 const dlName = (f: FileSpec, block: number, node: string) => `${f.prefix}_000${block}_${node}.blk`;
 
@@ -105,7 +123,7 @@ export function fetchReplica(key: string, block: number, copy: number): Fetch {
   const s = store.s;
   const f = specOf(key);
   const r = f.place[block - 1][copy];
-  if (rackDown(r.node)) return { status: 'timeout' };
+  if (rackDown(r.node)) { audit(`FETCH block ${block} (${nodeLabel(r.node)}) TIMEOUT (rack ${r.node[1]}, no heartbeat)`); return { status: 'timeout' }; }
   const folder = ensureFolder();
   const name = dlName(f, block, r.node);
   const id = `${f.prefix}${block}${r.node}`;
@@ -114,6 +132,7 @@ export function fetchReplica(key: string, block: number, copy: number): Fetch {
   if ((old && !old.parents.includes('bin')) || Object.values(s.fs).some((n) => n.parents.includes(folder) && n.name === name)) return { status: 'exists', name };
   s.fs[id] = { id, name, kind: 'txt', parents: [folder], created: stamp(), modified: stamp(), content: replicaText(key, block, copy), unsearchable: true, author: 'HSC' };
   store.bump();
+  audit(`FETCH ${f.name} block ${block} (${nodeLabel(r.node)}) ${r.ok ? 'OK' : 'CRC FAIL'}`);
   return { status: r.ok ? 'ok' : 'crc', name };
 }
 
@@ -142,6 +161,8 @@ export function tryJoin(key: string, picks: string[]): { ok: true } | { ok: fals
     if (!/CRC: OK/.test(n.content ?? '')) return { ok: false, why: `Join failed: block ${b}: CRC FAIL.` };
   }
   if (!s.flags[f.flag]) {
+    audit(`JOIN ${f.name} ${f.text.length} of ${f.text.length}`);
+    if (f.key === 'report') s.flags.assembledAt = s.playMs;
     s.flags[f.flag] = true;
     s.fs[f.docId] = {
       id: f.docId, name: f.docName, kind: 'doc', parents: ['hscdl'], created: stamp(), modified: stamp(),
@@ -154,7 +175,7 @@ export function tryJoin(key: string, picks: string[]): { ok: true } | { ok: fals
     store.bump();
     if (weirMounted()) {
       hrsLog('Volume mounted on hsc.haldenrecords.co.uk:50070: nantweir.stn (read-only). Not an archive volume.', 'Warning');
-      journalLine('Mounted: nantweir.stn (read-only). 4 directories, 8 files.\n0 Carrow records. Outside Authority scope. No action.');
+      journalLine('Mounted: nantweir.stn (read-only). 4 directories, 8 files.\nKeeper 1979-1986: E. Rowley. Not a service.\n0 Carrow records. Outside Authority scope. No action.');
       setTimeout(() => { balloon('HSC Client', 'Volume mounted: nantweir.stn (read-only). 4 directories, 8 files. Listed on the cluster page.'); sfx('ding'); store.bump(); }, 3500);
     }
   }

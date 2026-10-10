@@ -4,7 +4,7 @@ import { stamp } from '../../engine/clock';
 import { sfx } from '../../engine/bus';
 import { hrsLog, journalLine } from '../../engine/director';
 import { chooseEnding } from '../../story/climax';
-import { HSC_HOST, HSC_USER, HSC_PASSWORD, RACKS, NODES, OFFLINE, FILES, specOf, nodeLabel, rackOf, rackDown, fetchReplica,  WEIR_HOST, SLUICE_CODE, weirMounted, WEIR_FILES, WEIR_PAPERS, WEIR_DIRS, WEIR_OFFICER, type Fetch } from '../../story/storage';
+import { HSC_HOST, HSC_USER, HSC_PASSWORD, RACKS, NODES, OFFLINE, FILES, specOf, nodeLabel, rackOf, rackDown, fetchReplica,  WEIR_HOST, SLUICE_CODE, weirMounted, markWeirRead, WEIR_FILES, WEIR_PAPERS, WEIR_DIRS, WEIR_OFFICER, type Fetch } from '../../story/storage';
 
 const AUDIT: [string, string, string][] = [
   ['12/02/2008 10:14', 't.brandt', 'LOGIN'],
@@ -40,14 +40,7 @@ export function Hsc({ rest, go }: { rest: string; go: (u: string) => void }) {
   const path = rest.split('?')[0] || '/';
   // Reading a weir file is recorded after the page has drawn, not while it draws.
   const weirFile = path === '/weir' && s.flags.weirAuth ? q.get('f') : null;
-  useEffect(() => {
-    if (!weirFile || !WEIR_FILES[weirFile]) return;
-    const seen: string[] = (s.flags.weirRead ??= []);
-    if (seen.includes(weirFile)) return;
-    seen.push(weirFile);
-    if (seen.length === WEIR_PAPERS) { journalLine(`Reviewer read ${WEIR_PAPERS} records on nantweir.stn.\n(host is outside the archive; cannot be harmonised)`); hrsLog(`Reviewer opened ${WEIR_PAPERS} records on nantweir.stn (outside the archive).`, 'Information'); }
-    store.bump();
-  }, [weirFile]);
+  useEffect(() => { if (weirFile) markWeirRead(weirFile); }, [weirFile]);
   useEffect(() => {
     if (path !== '/weir' || !weirMounted() || s.flags.weirSeenDown) return;
     s.flags.weirSeenDown = true;
@@ -163,12 +156,13 @@ export function Hsc({ rest, go }: { rest: string; go: (u: string) => void }) {
         {FILES.map((f) => <tr key={f.key}><td><A to={`/file?file=${f.key}`}>{f.name}</A></td><td>{f.text.length}</td><td>3</td><td>Degraded</td></tr>)}
         <tr><td>census_1978.xls</td><td>12</td><td>3</td><td>Healthy</td></tr>
         <tr><td>gate_log_aug1979.log</td><td>1</td><td>3</td><td>Healthy</td></tr>
+        <tr><td>evacuation_certificate_12081979.doc</td><td>1</td><td>1</td><td>Healthy</td></tr>
       </tbody></table></>);
   }
   if (path === '/logs') {
     return (<>{head}<h1>NameNode audit log</h1>
       <table className="listview"><thead><tr><th>Time</th><th>User</th><th>Action</th></tr></thead><tbody>
-        {AUDIT.map(([t, who, what], i) => <tr key={i}><td>{t}</td><td>{who}</td><td>{what}</td></tr>)}
+        {[...AUDIT, ...((s.flags.hscAudit ?? []) as [string, string, string][])].map(([t, who, what], i) => <tr key={i}><td>{t}</td><td>{who}</td><td>{what}</td></tr>)}
         <tr><td>{stamp()}</td><td>{HSC_USER}</td><td>LOGIN</td></tr>
       </tbody></table></>);
   }
