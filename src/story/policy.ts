@@ -7,7 +7,6 @@ import { session } from '../engine/fs';
 // The Administrator can lift each one from the Service Console.
 export const POLICIES: Record<string, { label: string; message: string }> = {
   taskmgr: { label: 'Task Manager', message: 'Task Manager has been disabled by your administrator.' },
-  events: { label: 'Event Viewer', message: 'This operation has been cancelled due to restrictions in effect on this computer. Please contact your system administrator.' },
 };
 
 export const isRestricted = (app: string): boolean => !!POLICIES[app] && !session.admin && !store.s.flags[`allow_${app}`];

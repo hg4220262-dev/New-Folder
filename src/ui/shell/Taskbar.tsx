@@ -49,7 +49,7 @@ export function Taskbar() {
           ))}
         </div>
         <div className="tray">
-          <span title="HRS Archive Assistant" className="hand" onClick={(e) => openMenu(e, [{ label: 'HRS Archive Assistant', bold: true, disabled: true }, { label: `Review: Carrow (${s.chapter >= 4 ? '435 / 435' : '412 / 412'})`, disabled: true }, { label: viewedLabel(s), disabled: true }])}>
+          <span title="HRS Archive Assistant" className="hand" onClick={(e) => openMenu(e, [{ label: 'HRS Archive Assistant', bold: true, disabled: true }, { label: `Review: Carrow (${s.chapter >= 4 ? '435 / 435' : '412 / 412'})`, disabled: true }, { label: viewedLabel(s), disabled: true }, ...(s.flags.lastNote ? [{ sep: true }, { label: 'Last note', bold: true, disabled: true }, { label: String(s.flags.lastNote), disabled: true }] : [])])}>
             <InfoIcon size={16} type={s.chapter >= 3 ? 'warn' : 'info'} />
           </span>
           <svg width="16" height="16" viewBox="0 0 16 16">

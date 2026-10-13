@@ -340,3 +340,20 @@ describe('the three before you', () => {
     expect(store.s.flags.jl.join('\n')).toContain('Option D: open gates, Nant Weir ... REJECTED');
   });
 });
+
+describe('tester report', () => {
+  it('leaves Event Viewer open to the reviewer; only Task Manager is restricted', async () => {
+    const { POLICIES } = await import('../src/story/policy');
+    expect(Object.keys(POLICIES)).toEqual(['taskmgr']);
+  });
+
+  it('points at the photographs for the station word before it asks for the officer', () => {
+    store.s.chapter = 3; store.s.phase = 'desktop';
+    Object.assign(store.s.flags, { assembled: true, assembledKell: true, assembledOps: true, weirSeenDown: true, adminEver: true, rack2On: true, coaxAuth: true, coaxUp: true, weirAuth: true, weirRead: ['a', 'b', 'c', 'd'] });
+    play(1000); play(3 * 60_000);
+    expect(store.s.flags.lastNote).toContain('station word');
+    store.s.flags.codeOk = true;
+    play(1000); play(3 * 60_000);
+    expect(store.s.flags.lastNote).toContain('authority list');
+  });
+});

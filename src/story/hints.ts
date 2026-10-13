@@ -31,6 +31,7 @@ function stall(s: State, k: string, st: number, lines: string[], wait: number) {
   if (lvl >= lines.length || s.playMs - (f[`${k}T`] ?? s.playMs) < wait) return;
   const text = lines[lvl];
   f[`${k}Lvl`] = lvl + 1; f[`${k}T`] = s.playMs;
+  f.lastNote = text;
   hrsLog(text, 'Warning'); journalLine(text);
   if (lvl >= 1) balloon('HRS Archive Assistant', text, undefined, true);
 }
@@ -82,6 +83,10 @@ const TRAIL: { at: (s: State) => boolean; lines: string[] }[] = [
     'nantweir.stn: /keeper 3 files, /archive 3, /telemetry 1, /station 1 and sluice_panel (live). Fewer than 4 files opened.',
     'nantweir.stn: 8 papers in 4 directories. Fewer than 4 opened. sluice_panel listed under /station.',
     "/station/sluice_manual.txt, 4.2: station code in 2 parts; part 2 is given for this installation. 4.3: an officer's name is also required."] },
+  { at: (s) => !s.flags.codeOk, lines: [
+    'sluice_panel: station code rejected. Part 1 is the station word (keeper\'s book: "same as the door").',
+    'C:\\HRS\\Carrow\\04 Photographs: 1 photograph of the station, 1979. Its caption describes the door.',
+    "Weir keeper's cottage.jpg, Properties, Summary: the caption names the bird on the station door."] },
   { at: () => true, lines: [
     'nantweir.stn: sluice panel authority list has 1 entry, dated 06/1979.',
     'sluice_panel (nantweir.stn): accepts only an officer on its authority list. Authority list: 1 entry, dated 06/1979.',

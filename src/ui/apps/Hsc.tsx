@@ -128,6 +128,7 @@ export function Hsc({ rest, go }: { rest: string; go: (u: string) => void }) {
     const release = () => {
       if (locked || s.flags.sluicesOpen) return;
       if (!(ok1 && ok2)) { fail('Station code rejected.'); return; }
+      if (!s.flags.codeOk) { s.flags.codeOk = true; store.bump(); }
       if (!ok3) { fail('Station code accepted. Officer not on the authority list.'); return; }
       if (!armed) { setArmed(true); setErr(''); return; }
       s.flags.sluicesOpen = true;
