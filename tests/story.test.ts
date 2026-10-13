@@ -357,3 +357,26 @@ describe('tester report', () => {
     expect(store.s.flags.lastNote).toContain('authority list');
   });
 });
+
+describe('the crash fuse and the side route', () => {
+  it('holds the five-minute crash while the Board report is joined, then fires once the route is left', async () => {
+    store.s.chapter = 4; store.s.phase = 'desktop';
+    A.openNode('journal');
+    expect(store.s.chapter).toBe(5);
+    closeAll();
+    store.s.flags.assembled = true;
+    play(1000); play(6 * 60_000);
+    expect(store.s.flags.climax).toBeUndefined();
+    expect(store.s.timers.some((t) => t.fx === 'autoCrash')).toBe(true);
+    delete store.s.flags.assembled;
+    play(3 * 60_000);
+    expect(store.s.flags.climax).toBe('auto');
+  });
+  it('still crashes on time when the reviewer has stayed in the archive', async () => {
+    store.s.chapter = 4; store.s.phase = 'desktop';
+    A.openNode('journal');
+    closeAll();
+    play(1000); play(5 * 60_000 + 500);
+    expect(store.s.flags.climax).toBe('auto');
+  });
+});

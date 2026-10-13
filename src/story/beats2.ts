@@ -5,6 +5,11 @@ import { JOURNAL_END } from './journal';
 import { lateMail } from './world_mail';
 import { makeCtx } from './ctx';
 import { climax } from './climax';
+import type { State } from '../engine/state';
+
+const SIDE_APPS = ['ie', 'joiner', 'linkterm', 'console'];
+/** Out on the side route: a cluster, console or terminal window open, the Administrator on, or the report joined and no ending yet. */
+export const sideBusy = (s: State) => !s.ending && (!!s.flags.assembled || s.flags.account === 'admin' || s.windows.some((w) => SIDE_APPS.includes(w.app)));
 
 export const EVIDENCE = ['kell', 'mr1', 'regp2', 'scan412']; // the four pieces of evidence: faked into Recent in ch4, undeletable from ch3
 
@@ -75,5 +80,11 @@ defineFx({
     hrsLog('The HRS Continuity Service service was successfully restarted.');
     journalLine('Restarted. The reviewer is still here.');
   },
-  autoCrash: () => climax('auto'),
+  // The five-minute fuse waits while the reviewer is out on the side route. Close Archive Review
+  // still brings the crash on at any time.
+  autoCrash: (s) => {
+    if (!sideBusy(s)) { climax('auto'); return; }
+    s.fired = s.fired.filter((f) => f !== 'autoCrash');
+    s.timers.push({ fx: 'autoCrash', at: s.playMs + 2 * 60_000 });
+  },
 });
